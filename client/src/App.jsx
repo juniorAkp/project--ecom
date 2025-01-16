@@ -17,7 +17,7 @@ import UserEditDetails from './pages/Edit.jsx';
 import OrderPage from './pages/OrderPage.jsx';
 import FeaturedProducts from './pages/FeaturedProducts.jsx';
 
-axios.defaults.baseURL = 'http://localhost:8080 '
+axios.defaults.baseURL = 'http://localhost:8080'
 axios.defaults.withCredentials = true;
 
 
