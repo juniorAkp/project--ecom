@@ -9,7 +9,8 @@ const allowedOrigins = [
     'http://localhost:5175',
     'http://localhost:8080',
     process.env.API_URL,
-    'https://project-ecom-wgtd.vercel.app'
+    'https://project-ecom-wgtd.vercel.app',
+    'https://project-ecom-x7fx.onrender.com'
 ];
 console.log(allowedOrigins)
 
