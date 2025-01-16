@@ -5,7 +5,8 @@ const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:5173',
     'http://localhost:5175',
-    'http://localhost:8080'
+    'http://localhost:8080',
+    process.env.API_URL
 ];
 
 module.exports = allowedOrigins;
