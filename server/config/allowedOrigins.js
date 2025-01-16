@@ -1,3 +1,5 @@
+const dotenv = require('dotenv')
+dotenv.config()
 const allowedOrigins = [
     'https://www.google.com',
     'http://127.0.0.1:5500',
@@ -8,5 +10,6 @@ const allowedOrigins = [
     'http://localhost:8080',
     process.env.API_URL
 ];
+console.log(allowedOrigins)
 
 module.exports = allowedOrigins;
