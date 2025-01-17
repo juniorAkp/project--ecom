@@ -41,8 +41,10 @@ const CartPage = () => {
                       />
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">{item.product.name}</h3>
-                        <p className="text-sm text-gray-600">Color: {item.product.color || "N/A"}</p>
                         <p className="text-sm text-gray-600">Price: ${item.product.price}</p>
+                        <p className="text-sm text-gray-600 mt-2">
+                          {item.product.richDescription || "No description available."}
+                        </p>
                         <div className="flex items-center space-x-2 mt-2">
                           <button
                             onClick={() =>
@@ -111,24 +113,6 @@ const CartPage = () => {
                 className="w-full mt-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-300"
               >
                 Proceed to Checkout
-              </button>
-            </div>
-
-            {/* Delivery Details */}
-            <div className="mt-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Delivery</h3>
-              <p className="text-sm text-gray-600 mb-2">
-                Enter your postal code for delivery availability.
-              </p>
-              <input
-                type="text"
-                value={zipCode}
-                onChange={handleZipCodeChange}
-                placeholder="Enter Zip Code"
-                className="w-full border border-gray-300 rounded px-4 py-2 mb-4"
-              />
-              <button className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-                Check Availability
               </button>
             </div>
           </div>
