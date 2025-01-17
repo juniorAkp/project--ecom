@@ -19,4 +19,4 @@ const generateTokenAndSetCookie2 = async(res,userId,isAdmin)=>{
   })
   return token
 }
-module.exports = generateTokenAndSetCookie
+module.exports = {generateTokenAndSetCookie,generateTokenAndSetCookie2}
