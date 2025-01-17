@@ -28,8 +28,28 @@ const Homepage = () => {
     <>
       <Header setProducts={setProducts} />
       <main className="bg-gray-50 min-h-screen pt-16">
+        {/* Hero Section */}
+        <section className="bg-orange-100 py-12 text-center">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+            Grab Up to 50% Off on Selected Headphones
+          </h1>
+          <button className="bg-green-600 text-white px-6 py-3 rounded-full shadow-md hover:bg-green-700">
+            Buy Now
+          </button>
+        </section>
+
+        {/* Product Section */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">Products</h1>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Headphones For You!</h2>
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex gap-4">
+              <button className="px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-300">Headphone Type</button>
+              <button className="px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-300">Price</button>
+              <button className="px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-300">Review</button>
+            </div>
+            <button className="px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-300">Sort by</button>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((product) => (
               <div key={product._id} className="bg-white rounded-lg shadow-md overflow-hidden group relative">
@@ -44,11 +64,9 @@ const Homepage = () => {
                     <p className="text-gray-600">${product.price}</p>
                   </div>
                 </a>
-                
-                {/* Add to Cart Button */}
                 <button
                   onClick={() => addItem(user._id, product._id)}
-                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition"
+                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition"
                 >
                   <FaCartPlus />
                 </button>
@@ -60,6 +78,5 @@ const Homepage = () => {
     </>
   );
 };
-
 
 export default Homepage;
