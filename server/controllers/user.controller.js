@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const mongoose = require("mongoose");
 
 
-const generateTokenAndSetCookie = require('../utils/generateTokenAndSetCookie');
+const {generateTokenAndSetCookie,generateTokenAndSetCookie2} = require('../utils/generateTokenAndSetCookie');
 
 const register = async(req,res)=>{
   const {name,email,password} = req.body;
@@ -47,10 +47,11 @@ const login = async(req,res)=>{
     }
     user.lastLogin = new Date(Date.now());
     const token = await generateTokenAndSetCookie(res, user._id,user.isAdmin)
+    const toekn2 = await generateTokenAndSetCookie2(res,user._id,user.isAdmin)
     return res.status(200).json({message:"User logged in successfully", success:true, user:{
       ...user._doc,
       password:undefined
-    },token})
+    },token,token2})
 
   } catch (error) {
     return res.status(500).json({message:error.message, success:false, })
