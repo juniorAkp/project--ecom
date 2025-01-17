@@ -29,21 +29,21 @@
       </branch-storage>
     </excluded-from-favorite>
     <option name="RECENT_COMMON_BRANCH" value="main" />
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="SYNC" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "juniorAkp"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;juniorAkp&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/juniorAkp/Ecom.git",
-    "accountId": "6dfb4e47-c86f-48c8-9529-084f272b694a"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/juniorAkp/Ecom.git&quot;,
+    &quot;accountId&quot;: &quot;6dfb4e47-c86f-48c8-9529-084f272b694a&quot;
   }
-}]]></component>
+}</component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -56,6 +56,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Node.js.app.js.executor": "Run",
     "Node.js.dbConfig.js.executor": "Run",
     "Node.js.index.js.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -101,6 +102,7 @@
       <workItem from="1737044350946" duration="918000" />
       <workItem from="1737047916911" duration="672000" />
       <workItem from="1737050089129" duration="2936000" />
+      <workItem from="1737066777657" duration="659000" />
     </task>
     <servers />
   </component>

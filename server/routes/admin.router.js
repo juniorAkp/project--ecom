@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { countUsers, getUsers } = require('../admin/user.controller');
 
-const { createProducts, updateProduct, deleteProduct, getProductCount, uploadProductImages, uploadOptions } = require('../admin/product.controller');
+const { createProducts, updateProduct, deleteProduct, getProductCount, upload, } = require('../admin/product.controller');
 
 const { updateCategory, deleteCategory, addCategory, getCategories, countCategories } = require('../admin/admin.category.controller');
 
@@ -16,11 +16,10 @@ router.get('/user/count',countUsers)
 router.get('/user',getUsers)
 
 //product routes
-router.post('/products', uploadOptions.single('image'),createProducts)
-router.put('/products/:id',uploadOptions.single('image'),updateProduct)
+router.post('/products' ,upload.single('image'), createProducts)
+router.put('/products/:id',updateProduct)
 router.delete('/products',deleteProduct)
 router.get('/products/count',getProductCount)
-router.put('/products/images/:id',uploadOptions.array('images',10),uploadProductImages)
 
 //category routes
 router.put('/category/:id',updateCategory)
