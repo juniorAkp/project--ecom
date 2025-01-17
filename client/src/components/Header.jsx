@@ -1,127 +1,82 @@
-import { FaShoppingCart, FaUserCircle, FaBars, FaTimes } from 'react-icons/fa';
-import { useAuthStore } from '../store/AuthStore';
+import { useEffect, useState } from 'react';
+import { FaCartPlus } from 'react-icons/fa';
+import Header from '../components/Header';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useAuthStore } from '../store/AuthStore';
 import { useCartStore } from '../store/CartStore';
 
-const Header = ({ setProducts }) => {
-  const { fetchCart, totalQuantity } = useCartStore();
-  const { user, logout } = useAuthStore();
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const Homepage = () => {
+  const { user } = useAuthStore();
+  const { addItem } = useCartStore();
+  const [products, setProducts] = useState([]);
 
-  const fetchCategories = async () => {
+  // Fetch products
+  const getProducts = async () => {
     try {
-      const { data } = await axios.get('/api/categories');
-      setCategories(data.category);
-    } catch {
-      console.error('Failed to fetch categories.');
-    }
-  };
-
-  const handleCategoryChange = async (e) => {
-    const category = e.target.value;
-    setSelectedCategory(category);
-    if (category) {
-      try {
-        const { data } = await axios.get(`/api/filter?category=${category}`);
-        setProducts(data.categorizedProducts);
-      } catch (error) {
-        console.error('Error filtering products by category:', error);
-      }
+      const { data } = await axios.get('/api/products');
+      if (data.success) setProducts(data.products);
+    } catch (error) {
+      console.error('Error fetching products:', error);
     }
   };
 
   useEffect(() => {
-    fetchCategories();
-    if (user) fetchCart(user._id);
+    getProducts();
   }, [user]);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
   return (
-    <header className="bg-gray-800 text-white fixed w-full z-20 top-0">
-      <nav className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-        {/* Logo */}
-        <a href="/" className="text-2xl font-bold">ShopLogo</a>
-
-        {/* Mobile Hamburger Menu */}
-        <div className="md:hidden">
-          <button onClick={toggleMenu} className="text-2xl">
-            {isMenuOpen ? <FaTimes /> : <FaBars />}
+    <>
+      <Header setProducts={setProducts} />
+      <main className="bg-gray-50 min-h-screen pt-16">
+        {/* Hero Section */}
+        <section className="bg-orange-100 py-12 text-center">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+            Grab Up to 50% Off on Selected Headphones
+          </h1>
+          <button className="bg-green-600 text-white px-6 py-3 rounded-full shadow-md hover:bg-green-700">
+            Buy Now
           </button>
-        </div>
+        </section>
 
-        {/* Categories & Links for Larger Screens */}
-        <div className={`hidden md:flex space-x-6 items-center ${isMenuOpen ? 'block' : 'hidden'}`}>
-          <a href="/featured" className="text-white hover:text-gray-400">Featured</a>
-          <select
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-            className="px-3 py-2 bg-white text-gray-800 rounded-lg border border-gray-300"
-          >
-            <option value="">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        {/* Product Section */}
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Headphones For You!</h2>
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex gap-4">
+              <button className="px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-300">Headphone Type</button>
+              <button className="px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-300">Price</button>
+              <button className="px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-300">Review</button>
+            </div>
+            <button className="px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-300">Sort by</button>
+          </div>
 
-        {/* User and Cart */}
-        <div className="flex items-center space-x-6">
-          {user ? (
-            <>
-              <div className="relative">
-                <a href="/cart-page">
-                  <FaShoppingCart className="text-2xl" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <div key={product._id} className="bg-white rounded-lg shadow-md overflow-hidden group relative">
+                <a href="#" className="block">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-48 object-cover group-hover:opacity-75"
+                  />
+                  <div className="p-4">
+                    <h3 className="text-lg font-medium text-gray-800">{product.name}</h3>
+                    <p className="text-gray-600">${product.price}</p>
+                  </div>
                 </a>
-                {totalQuantity > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2">
-                    {totalQuantity}
-                  </span>
-                )}
+                <button
+                  onClick={() => addItem(user._id, product._id)}
+                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition"
+                >
+                  <FaCartPlus />
+                </button>
               </div>
-              <a href={user.isAdmin ? "/admin" : "/user-edit"}>
-                <FaUserCircle className="text-2xl" />
-              </a>
-              <button
-                onClick={logout}
-                className="text-sm font-medium hover:underline"
-              >
-                Logout, {user.name}
-              </button>
-            </>
-          ) : (
-            <a href="/login" className="text-sm font-medium hover:underline">
-              Log in
-            </a>
-          )}
-        </div>
-      </nav>
-
-      {/* Mobile Menu (when menu is open) */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-gray-800 text-white py-4">
-          <a href="/feature" className="block px-4 py-2 hover:bg-gray-700">Featured</a>
-          <select
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-            className="block px-4 py-2 bg-white text-gray-800 rounded-lg border border-gray-300 mt-2 w-full"
-          >
-            <option value="">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
             ))}
-          </select>
+          </div>
         </div>
-      )}
-    </header>
+      </main>
+    </>
   );
 };
 
-export default Header;
+export default Homepage;
