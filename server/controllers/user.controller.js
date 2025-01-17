@@ -47,7 +47,7 @@ const login = async(req,res)=>{
     }
     user.lastLogin = new Date(Date.now());
     const token = await generateTokenAndSetCookie(res, user._id,user.isAdmin)
-    const toekn2 = await generateTokenAndSetCookie2(res,user._id,user.isAdmin)
+    const token2 = await generateTokenAndSetCookie2(res,user._id,user.isAdmin)
     return res.status(200).json({message:"User logged in successfully", success:true, user:{
       ...user._doc,
       password:undefined
@@ -63,9 +63,15 @@ const logout = async (req, res) => {
         res.clearCookie('token',{
           httpOnly: true,
           secure: process.env.NODE_ENV !== "development",
-          sameSite: "Lax",
           maxAge: 24 * 60 * 60 * 1000,
         }
+        res.clearCookie('token2',{
+          httpOnly: true,
+          secure: process.env.NODE_ENV != "development",
+          sameSite: "None",
+          maxAge: 24 * 60 * 60 * 1000,
+        }
+                        
           );
         res.status(200).json({ message: 'Logged out successfully' });
     } catch (error) {
