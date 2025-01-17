@@ -17,7 +17,7 @@ import UserEditDetails from './pages/Edit.jsx';
 import OrderPage from './pages/OrderPage.jsx';
 import FeaturedProducts from './pages/FeaturedProducts.jsx';
 
-axios.defaults.baseURL = 'http://localhost:8080'
+axios.defaults.baseURL = 'https://project-ecom-x7fx.onrender.com'
 axios.defaults.withCredentials = true;
 
 
@@ -66,13 +66,19 @@ const App = () => {
       <ToastContainer />
       <Routes>
         {/* Add routes here */}
-
+        
         <Route path="/" element={
+          <ProtectedRoute>
             <Homepage />
+          </ProtectedRoute>
+            
 
         } />
         <Route path="/featured" element={
+          <ProtectedRoute>
             <FeaturedProducts />
+          </ProtectedRoute>
+            
 
         } />
         <Route path="/login" element={
