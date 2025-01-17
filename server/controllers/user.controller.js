@@ -64,15 +64,15 @@ const logout = async (req, res) => {
           httpOnly: true,
           secure: process.env.NODE_ENV !== "development",
           maxAge: 24 * 60 * 60 * 1000,
-        }
+        });
+      
         res.clearCookie('token2',{
           httpOnly: true,
           secure: process.env.NODE_ENV != "development",
           sameSite: "None",
           maxAge: 24 * 60 * 60 * 1000,
-        }
-                        
-          );
+        });
+      
         res.status(200).json({ message: 'Logged out successfully' });
     } catch (error) {
         console.error('Logout error:', error);
