@@ -68,18 +68,12 @@ const App = () => {
         {/* Add routes here */}
         
         <Route path="/" element={
-          <ProtectedRoute>
             <Homepage />
-          </ProtectedRoute>
-            
-
+  
         } />
         <Route path="/featured" element={
-          <ProtectedRoute>
             <FeaturedProducts />
-          </ProtectedRoute>
-            
-
+  
         } />
         <Route path="/login" element={
           <RedirectAuthenticatedUser>
