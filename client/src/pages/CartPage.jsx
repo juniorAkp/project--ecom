@@ -41,10 +41,25 @@ const CartPage = () => {
                       />
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">{item.product.name}</h3>
+                        <p className="text-sm text-gray-600">Color: {item.product.color || "N/A"}</p>
                         <p className="text-sm text-gray-600">Price: ${item.product.price}</p>
-                        <p className="text-sm text-gray-600 mt-2">
-                          {item.product.richDescription || "No description available."}
-                        </p>
+                        
+                        {/* Star Rating */}
+                        <div className="flex items-center mt-2">
+                          {Array.from({ length: 5 }, (_, index) => (
+                            <svg
+                              key={index}
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="20"
+                              height="20"
+                              fill={index < item.product.rating ? "gold" : "gray"} // Gold for rated stars
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M12 17.3l-6.6 4.4 5-7.6-6.8-5.6 8.2-.7L12 0l2.2 7.7 8.2 .7-6.8 5.6 5 7.6L12 17.3z" />
+                            </svg>
+                          ))}
+                        </div>
+
                         <div className="flex items-center space-x-2 mt-2">
                           <button
                             onClick={() =>
@@ -72,6 +87,11 @@ const CartPage = () => {
                             +
                           </button>
                         </div>
+
+                        {/* Description below the quantity adjustment */}
+                        <p className="text-sm text-gray-600 mt-4">
+                          {item.product.description || "No description available."}
+                        </p>
                       </div>
                     </div>
                     <p className="text-xl font-semibold text-gray-900">
