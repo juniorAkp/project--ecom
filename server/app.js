@@ -24,7 +24,10 @@ const adminOnly = require('./middlewares/adminOnly');
 app.set('trust proxy', 1)
 app.use(express.static(path.join(__dirname,'public')))
 app.use(credentials)
-app.use(cors(corsConfig));
+app.use(cors({
+    origin: "https://project-ecom-1.onrender.com",
+    credentials: true
+    }));
 app.use(cookieParser())
 app.use(express.json());
 app.use(morgan('tiny'))
