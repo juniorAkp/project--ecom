@@ -11,8 +11,6 @@ const CartPage = () => {
   const calculateSubtotal = () =>
     cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
 
-  const handleZipCodeChange = (e) => setZipCode(e.target.value);
-
   useEffect(() => {
     fetchCart(user._id);
   }, [user]);
@@ -40,7 +38,7 @@ const CartPage = () => {
                       />
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">{item.product.name}</h3>
-                        <p className="text-sm text-gray-600">Color: {item.product.reviews || "N/A"}</p>
+                        <p className="text-sm text-gray-600">Ratings: {item.product.reviews || "N/A"}</p>
                         
                         {/* Star Rating */}
                         <div className="flex items-center mt-2">
@@ -127,11 +125,12 @@ const CartPage = () => {
                 <span>Total</span>
                 <span>${(calculateSubtotal() * 1.1).toFixed(2)}</span>
               </div>
-              <button
-                className="w-full mt-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-300"
-              >
-                Proceed to Checkout
-              </button>
+              <a href="/order-page">
+                <button
+                  className="w-full mt-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300"
+                >
+                  Proceed to Checkout
+                </button>
             </div>
           </div>
         </div>
