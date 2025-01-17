@@ -8,12 +8,27 @@ const CartPage = () => {
   const { user } = useAuthStore();
   const { cart, fetchCart, updateItemQuantity, removeItem } = useCartStore();
 
-  const calculateSubtotal = () =>
+  const calculateSubtotal = () => 
     cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
 
   useEffect(() => {
     fetchCart(user._id);
   }, [user]);
+
+  const renderStarRating = (rating) => {
+    return Array.from({ length: 5 }, (_, index) => (
+      <svg
+        key={index}
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        fill={index < rating ? "gold" : "gray"}
+        viewBox="0 0 24 24"
+      >
+        <path d="M12 17.3l-6.6 4.4 5-7.6-6.8-5.6 8.2-.7L12 0l2.2 7.7 8.2 .7-6.8 5.6 5 7.6L12 17.3z" />
+      </svg>
+    ));
+  };
 
   return (
     <>
@@ -42,18 +57,7 @@ const CartPage = () => {
                         
                         {/* Star Rating */}
                         <div className="flex items-center mt-2">
-                          {Array.from({ length: 5 }, (_, index) => (
-                            <svg
-                              key={index}
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="20"
-                              height="20"
-                              fill={index < item.product.rating ? "gold" : "gray"} // Gold for rated stars
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="M12 17.3l-6.6 4.4 5-7.6-6.8-5.6 8.2-.7L12 0l2.2 7.7 8.2 .7-6.8 5.6 5 7.6L12 17.3z" />
-                            </svg>
-                          ))}
+                          {renderStarRating(item.product.rating)}
                         </div>
 
                         <div className="flex items-center space-x-2 mt-2">
@@ -131,6 +135,7 @@ const CartPage = () => {
                 >
                   Proceed to Checkout
                 </button>
+              </a>
             </div>
           </div>
         </div>
