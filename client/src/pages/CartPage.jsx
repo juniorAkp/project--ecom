@@ -7,7 +7,6 @@ import Header from "../components/Header";
 const CartPage = () => {
   const { user } = useAuthStore();
   const { cart, fetchCart, updateItemQuantity, removeItem } = useCartStore();
-  const [zipCode, setZipCode] = useState("");
 
   const calculateSubtotal = () =>
     cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
@@ -41,8 +40,7 @@ const CartPage = () => {
                       />
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">{item.product.name}</h3>
-                        <p className="text-sm text-gray-600">Color: {item.product.color || "N/A"}</p>
-                        <p className="text-sm text-gray-600">Price: ${item.product.price}</p>
+                        <p className="text-sm text-gray-600">Color: {item.product.reviews || "N/A"}</p>
                         
                         {/* Star Rating */}
                         <div className="flex items-center mt-2">
@@ -90,7 +88,7 @@ const CartPage = () => {
 
                         {/* Description below the quantity adjustment */}
                         <p className="text-sm text-gray-600 mt-4">
-                          {item.product.description || "No description available."}
+                          {item.product.richDescription || "No description available."}
                         </p>
                       </div>
                     </div>
