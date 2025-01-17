@@ -46,8 +46,9 @@ const login = async(req,res)=>{
       return res.json({error:"Invalid email or password", success:false})
     }
     user.lastLogin = new Date(Date.now());
-    const token = await generateTokenAndSetCookie(res, user._id,user.isAdmin)
     const token2 = await generateTokenAndSetCookie2(res,user._id,user.isAdmin)
+    const token = await generateTokenAndSetCookie(res, user._id,user.isAdmin)
+    
     return res.status(200).json({message:"User logged in successfully", success:true, user:{
       ...user._doc,
       password:undefined
