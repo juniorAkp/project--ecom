@@ -1,3 +1,9 @@
+import { useEffect, useState } from 'react';
+import { FaCartPlus } from 'react-icons/fa';
+import Header from '../components/Header';
+import axios from 'axios';
+import { useAuthStore } from '../store/AuthStore';
+import { useCartStore } from '../store/CartStore';
 const Homepage = () => {
   const { user } = useAuthStore();
   const { addItem } = useCartStore();
