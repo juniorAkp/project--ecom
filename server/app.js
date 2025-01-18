@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const session = require('express-session')
+const MongoStore = require('connect-mongo')
 const connection = require('./config/dbConfig');
 const cookieParser = require('cookie-parser')
 const path = require("node:path");
@@ -27,6 +29,24 @@ app.use(cors(corsConfig));
 app.use(cookieParser())
 app.use(express.json());
 app.use(morgan('tiny'))
+
+//session config
+app.use(
+    session({
+      secret: process.env.SESSION_SECRET || 'yourSecret',
+      resave: false,
+      saveUninitialized: false,
+      store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI,
+        ttl: 24 * 60 * 60, // 1 day
+      }),
+      cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== 'development',
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
+      },
+    })
+  );
 
 //routes
 app.use('/api',userRoutes)

@@ -3,7 +3,6 @@ import { useAuthStore } from "../store/AuthStore";
 import { useCartStore } from "../store/CartStore";
 import axios from "axios";
 import Header from "../components/Header";
-import PaystackPop from '@paystack/inline-js'
 
 const OrderPage = () => {
   const { user } = useAuthStore();
@@ -22,8 +21,8 @@ const OrderPage = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const calculateSubtotal = () => {
-    return cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0)*0.1;
+  const calculateTotal = () => {
+    return cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   };
 
   // Paystack Payment Initialization
@@ -58,45 +57,44 @@ const OrderPage = () => {
     }
   };
 
-  const handleCheckout = async () => {
-    const subtotal = calculateSubtotal();
-    if (subtotal === 0) {
-      alert("Your cart is empty.");
-      return;
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    try {
-      const amountInSmallestUnit = Math.round(subtotal*100); // Convert subtotal to kobo
-      const paymentUrl = await pay(user.email, amountInSmallestUnit);
-      window.location.href = paymentUrl;
-    } catch (error) {
-      setError("An error occurred while processing your payment. Please try again.");
-    }
-  };
+    const { shippingAddress1, city, zip, country, phone } = shippingDetails;
 
-  const handlePlaceOrder = async () => {
-    const subtotal = calculateSubtotal();
-    if (subtotal === 0) {
-      alert("Your cart is empty.");
+    if (!shippingAddress1 || !city || !zip || !country || !phone) {
+      setError("Please fill in all required fields.");
       return;
     }
 
     setIsProcessing(true);
 
     try {
-      const { data } = await axios.post("/api/orders", {
+      // Calculate the total price
+      const totalAmount = calculateTotal();
+      if (totalAmount === 0) {
+        alert("Your cart is empty.");
+        return;
+      }
+
+      // Place the order on the server
+      const { data: orderData } = await axios.post("/api/orders", {
         userId: user._id,
         ...shippingDetails,
       });
 
-      if (data.success) {
-        setSuccess("Your order has been placed successfully!");
-        setError("");
-      } else {
-        throw new Error(data.message || "An error occurred.");
+      if (!orderData.success) {
+        throw new Error(orderData.message || "An error occurred while placing the order.");
       }
+
+      // Initialize payment via Paystack
+      const amountInSmallestUnit = Math.round(totalAmount * 100); // Convert total amount to kobo
+      const paymentUrl = await pay(user.email, amountInSmallestUnit);
+
+      // Redirect to the Paystack payment page
+      window.location.href = paymentUrl;
     } catch (error) {
-      setError("Something went wrong. Please try again later.");
+      setError(error.message || "An error occurred. Please try again later.");
     } finally {
       setIsProcessing(false);
     }
@@ -123,37 +121,6 @@ const OrderPage = () => {
       ...prevState,
       [name]: value,
     }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const { shippingAddress1, city, zip, country, phone } = shippingDetails;
-
-    if (!shippingAddress1 || !city || !zip || !country || !phone) {
-      setError("Please fill in all required fields.");
-      return;
-    }
-
-    setIsProcessing(true);
-
-    try {
-      const { data } = await axios.post("/api/orders", {
-        userId: user._id,
-        ...shippingDetails,
-      });
-
-      if (data.success) {
-        setSuccess("Your order has been placed successfully!");
-        setError("");
-      } else {
-        throw new Error(data.message || "An error occurred.");
-      }
-    } catch (error) {
-      setError("Something went wrong. Please try again later.");
-    } finally {
-      setIsProcessing(false);
-    }
   };
 
   return (
@@ -230,12 +197,6 @@ const OrderPage = () => {
                 </button>
               </div>
             </form>
-            <button
-              onClick={handleCheckout}
-              className="mt-4 w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              Proceed to Payment
-            </button>
           </div>
         </div>
       </div>

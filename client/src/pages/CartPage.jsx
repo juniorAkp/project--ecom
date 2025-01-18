@@ -8,14 +8,27 @@ const CartPage = () => {
   const { user } = useAuthStore();
   const { cart, fetchCart, updateItemQuantity, removeItem } = useCartStore();
 
-  // Calculate subtotal
-  const calculateSubtotal = () =>
+  const calculateSubtotal = () => 
     cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
 
   useEffect(() => {
     fetchCart(user._id);
   }, [user]);
 
+  const renderStarRating = (rating) => {
+    return Array.from({ length: 5 }, (_, index) => (
+      <svg
+        key={index}
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        fill={index < rating ? "gold" : "gray"}
+        viewBox="0 0 24 24"
+      >
+        <path d="M12 17.3l-6.6 4.4 5-7.6-6.8-5.6 8.2-.7L12 0l2.2 7.7 8.2 .7-6.8 5.6 5 7.6L12 17.3z" />
+      </svg>
+    ));
+  };
 
   return (
     <>
@@ -40,7 +53,13 @@ const CartPage = () => {
                       />
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">{item.product.name}</h3>
-                        <p className="text-sm text-gray-600">Price: ${item.product.price}</p>
+                        <p className="text-sm text-gray-600">Ratings: {item.product.reviews || "N/A"}</p>
+                        
+                        {/* Star Rating */}
+                        <div className="flex items-center mt-2">
+                          {renderStarRating(item.product.rating)}
+                        </div>
+
                         <div className="flex items-center space-x-2 mt-2">
                           <button
                             onClick={() =>
@@ -68,6 +87,11 @@ const CartPage = () => {
                             +
                           </button>
                         </div>
+
+                        {/* Description below the quantity adjustment */}
+                        <p className="text-sm text-gray-600 mt-4">
+                          {item.product.richDescription || "No description available."}
+                        </p>
                       </div>
                     </div>
                     <p className="text-xl font-semibold text-gray-900">
@@ -76,7 +100,7 @@ const CartPage = () => {
 
                     {/* Remove Button */}
                     <button
-                      onClick={() => removeItem(user._id,item.product._id)}
+                      onClick={() => removeItem(user._id, item.product._id)}
                       className="text-red-500 hover:text-red-700 font-medium"
                     >
                       Remove
@@ -89,9 +113,9 @@ const CartPage = () => {
             )}
           </div>
 
-          {/* Right Column - Checkout */}
+          {/* Right Column - Checkout & Delivery Details */}
           <div className="bg-white rounded-lg shadow-xl p-6 sticky top-16 space-y-6">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Checkout</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Order Summary</h2>
             <div className="space-y-4">
               <div className="flex justify-between text-lg font-medium text-gray-700">
                 <span>Subtotal</span>
