@@ -46,12 +46,7 @@ const login = async(req,res)=>{
       return res.json({error:"Invalid email or password", success:false})
     }
     user.lastLogin = new Date(Date.now());
-<<<<<<< HEAD
     const token = await generateTokenAndSetCookie(req, user._id,user.isAdmin)
-=======
-    const token = await generateTokenAndSetCookie(res, user._id,user.isAdmin)
-
->>>>>>> 070e2d193aa2642aee14654fb232b1cbb1f753d0
     return res.status(200).json({message:"User logged in successfully", success:true, user:{
       ...user._doc,
       password:undefined
@@ -63,24 +58,9 @@ const login = async(req,res)=>{
 }
 
 const logout = async (req, res) => {
-<<<<<<< HEAD
   req.session.destroy((err) => {
     if (err) {
       return res.status(500).json({ message: 'Failed to log out', success: false });
-=======
-    try {
-        res.clearCookie('token',{
-           httpOnly: true,
-           secure: process.env.NODE_ENV !== "development",
-           sameSite: "None",
-           maxAge: 24 * 60 * 60 * 1000,
-        });
-      
-        res.status(200).json({ message: 'Logged out successfully' });
-    } catch (error) {
-        console.error('Logout error:', error);
-        res.status(500).json({ message: 'Logout failed' });
->>>>>>> 070e2d193aa2642aee14654fb232b1cbb1f753d0
     }
 
     // Clear the session cookie
