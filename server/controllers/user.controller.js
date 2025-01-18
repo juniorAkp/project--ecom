@@ -65,9 +65,10 @@ const logout = async (req, res) => {
 
     // Clear the session cookie
     res.clearCookie('connect.sid', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== 'development',
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== 'development',
+        sameSite: "none",
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
     res.status(200).json({ message: 'Logged out successfully', success: true });
