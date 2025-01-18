@@ -17,7 +17,7 @@ import UserEditDetails from './pages/Edit.jsx';
 import OrderPage from './pages/OrderPage.jsx';
 import FeaturedProducts from './pages/FeaturedProducts.jsx';
 
-axios.defaults.baseURL = 'https://project-ecom-x7fx.onrender.com'
+axios.defaults.baseURL = 'https://project-ecom-.onrender.com'
 axios.defaults.withCredentials = true;
 
 
