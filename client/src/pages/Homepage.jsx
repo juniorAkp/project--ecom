@@ -66,4 +66,8 @@ const Homepage = () => {
   );
 };
 
+<<<<<<< HEAD
 export default Homepage;
+=======
+export default Homepage;
+>>>>>>> 070e2d193aa2642aee14654fb232b1cbb1f753d0
