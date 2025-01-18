@@ -25,7 +25,7 @@ import UpdateCategory from './pages/admin/updateCategory.jsx';
 import ViewOrders from './pages/admin/viewOrders.jsx';
 import UpdateOrderStatus from './pages/admin/updateOrder.jsx';
 
-axios.defaults.baseURL = 'http://localhost:8080'
+axios.defaults.baseURL = 'https://project-ecom-x7fx.onrender.com'
 axios.defaults.withCredentials = true;
 
 
