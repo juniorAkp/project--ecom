@@ -12,12 +12,20 @@ import { useAuthStore } from './store/AuthStore.jsx';
 import ForgotPasswordPage from './pages/ForgotPassword.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
 import LoadingSpinner from './components/LoadingSpinner.jsx'
-import AddProduct from './pages/admin/adminPanel.jsx';
+import AddProduct from './pages/admin/addProduct.jsx';
 import UserEditDetails from './pages/Edit.jsx';
 import OrderPage from './pages/OrderPage.jsx';
 import FeaturedProducts from './pages/FeaturedProducts.jsx';
+import AdminDashboard from './pages/admin/adminPanel.jsx';
+import UpdateProduct from './pages/admin/updateProduct.jsx';
+import DisplayAllProducts from './pages/admin/displayAllproducts.jsx';
+import AddCategory from './pages/admin/addCategory.jsx';
+import ManageCategories from './pages/admin/displayCategories.jsx';
+import UpdateCategory from './pages/admin/updateCategory.jsx';
+import ViewOrders from './pages/admin/viewOrders.jsx';
+import UpdateOrderStatus from './pages/admin/updateOrder.jsx';
 
-axios.defaults.baseURL = 'https://project-ecom-x7fx.onrender.com'
+axios.defaults.baseURL = 'http://localhost:8080'
 axios.defaults.withCredentials = true;
 
 
@@ -114,7 +122,55 @@ const App = () => {
         } />
         <Route path="/admin" element={
           <AdminRoute>
+            < AdminDashboard />
+          </AdminRoute>
+
+        } />
+        <Route path="/add-product" element={
+          <AdminRoute>
             < AddProduct />
+          </AdminRoute>
+
+        } />
+        <Route path="/display-product" element={
+          <AdminRoute>
+            < DisplayAllProducts />
+          </AdminRoute>
+
+        } />
+        <Route path="/update-product/:id" element={
+          <AdminRoute>
+            < UpdateProduct />
+          </AdminRoute>
+
+        } />
+        <Route path="/add-category" element={
+          <AdminRoute>
+            < AddCategory />
+          </AdminRoute>
+
+        } />
+        <Route path="/display-categories" element={
+          <AdminRoute>
+            < ManageCategories />
+          </AdminRoute>
+
+        } />
+        <Route path="/update-category/:id" element={
+          <AdminRoute>
+            < UpdateCategory />
+          </AdminRoute>
+
+        } />
+        <Route path="/view-orders" element={
+          <AdminRoute>
+            < ViewOrders />
+          </AdminRoute>
+
+        } />
+        <Route path="/update-order/:id" element={
+          <AdminRoute>
+            < UpdateOrderStatus />
           </AdminRoute>
 
         } />

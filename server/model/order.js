@@ -22,6 +22,7 @@ const orderSchema = new Schema({
     totalPrice: { type: Number, required: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     dateOrdered: { type: Date, default: Date.now },
+    paymentReference: { type: String},
 });
 
 orderSchema.virtual('id').get(function () {

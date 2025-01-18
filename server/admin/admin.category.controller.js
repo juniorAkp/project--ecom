@@ -2,20 +2,35 @@ const Category = require('../model/category');
 const mongoose = require("mongoose");
 
 const addCategory = async(req,res)=>{
-  const {name,color} = req.body;
+  const {name} = req.body;
   try {
-      if(!name || !color) return res.status(400).json({error
+      if(!name) return res.status(400).json({error
               : "all field required",success: false});
 
       const category = new Category({
-          name: name,
-          color: color
+          name
       })
       await category.save();
       return res.status(200).json({newCategory: category,success: true})
   }catch (e) {
       return res.status(500).json({message:e.message,success:false})
   }
+}
+
+const getCategory = async(req,res)=>{
+    const {id} = req.params
+    try {
+        if(!mongoose.isValidObjectId(id)){
+            return res.status(400).json({error:"invalid category",success: false});
+        }
+        const category = await Category.findById(id);
+        if(!category){
+            return res.status(200).json({message: "no category found",success: true, data:[]})
+        }
+        return res.status(200).json({message:"categories found", category, success: true})
+    } catch (error) {
+        
+    }
 }
 
 const updateCategory = async(req,res)=>{
@@ -73,6 +88,7 @@ const countCategories = async(req,res)=>{
 module.exports = {
   addCategory,
   getCategories,
+  getCategory,
   updateCategory,
   deleteCategory,
   countCategories

@@ -27,7 +27,7 @@ app.set('trust proxy', 1)
 app.use(express.static(path.join(__dirname,'public')))
 app.use(credentials)
 app.use(cors({
-    origin: "https://project-ecom-1.onrender.com",
+    origin: ["https://project-ecom-1.onrender.com","http://localhost:5173"],
     credentials: true
     }));
 app.use(cookieParser())
@@ -47,6 +47,7 @@ app.use(
       cookie: {
         httpOnly: true,
         secure: process.env.NODE_ENV !== 'development',
+        sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000, // 1 day
       },
     })

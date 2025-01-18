@@ -6,7 +6,7 @@ const { getProduct, products, getProductsByCategoriesFilter, featuredProducts} =
 const {register,login,checkAuth,updateUser,getUser, logout} = require('../controllers/user.controller')
 
 
-const { getOrder, addOrder, deleteOrder } = require('../controllers/order.controller');
+const { getOrder, addOrder, deleteOrder, updateToPaid } = require('../controllers/order.controller');
 
 const { addToCart, updateCart, deleteCart, getUserCart } = require('../controllers/cart.controller');
 
@@ -31,7 +31,8 @@ router.put('/user/update-details/:id',verify,updateUser)
 
 //order routes
 router.get('/orders/user/:userId',verify,getOrder)
-router.post('/orders',verify, addOrder);
+router.put('/update-orders/:orderId/pay',updateToPaid)
+router.post('/add-order',verify, addOrder);
 router.delete('/orders/:id',verify, deleteOrder);
 
 //cart routes

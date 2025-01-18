@@ -16,6 +16,15 @@ const storage = multer.diskStorage({
   
   const upload = multer({ storage });
   
+
+  const getProduct = async(req,res)=>{
+    const {id} = req.params;
+    if(!mongoose.isValidObjectId(id)) return res.status(400).json({message: "invalid id",success:false})
+    const product = await Product.findById(id);
+    if(!product) return res.status(200).json({message: "no product found", success: true, data:[]})
+
+    return res.status(200).json({message: "product found", product,success: true})
+  }
   const createProducts = async (req, res) => {
     const { name, description, richDescription, price, category, isFeatured, countInStock, rating, reviews } = req.body;
   
@@ -96,7 +105,7 @@ const updateProduct = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
 
   if (!isValidObjectId(id)) {
     return res.status(400).json({ error: "Invalid product ID", success: false });
@@ -133,6 +142,7 @@ const getProductCount = async (req, res) => {
 module.exports = {
     upload,
   createProducts,
+  getProduct,
   updateProduct,
   deleteProduct,
   getProductCount,

@@ -68,6 +68,27 @@ const addOrder = async (req, res) => {
 };
 
 
+
+const updateToPaid = async (req,res)=>{
+    try {
+        const { orderId } = req.params;
+    
+        // Find the order and update its status
+        const order = await Order.findById(orderId);
+        if (!order) {
+          return res.status(404).json({ message: 'Order not found.', success: false });
+        }
+    
+        // Update the order status to 'paid'
+        order.status = 'Paid';
+        await order.save();
+    
+        res.status(200).json({ success: true, message: 'Order status updated to paid.' });
+      } catch (error) {
+        console.error("Error updating order status:", error);
+        res.status(500).json({ message: 'Internal server error.', success: false });
+      }
+}
 const deleteOrder = async(req,res)=>{
   const { id } = req.params;
 
@@ -99,5 +120,6 @@ const deleteOrder = async(req,res)=>{
 module.exports = {
   getOrder,
   deleteOrder,
-  addOrder
+  addOrder,
+  updateToPaid
 }

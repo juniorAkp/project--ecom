@@ -17,9 +17,9 @@ const editOrder = async(req,res)=>{
 
 const getOrders = async(req,res)=>{
   try {
-    const orders = await Order.find().sort({dateOrdered: -1})
+    const orders = await Order.find().sort({dateOrdered: -1}).populate('user','name')
     if(!orders) return res.status(400).json({error: "no orders found",success: false})
-    return res.status(200).json({orders: orders, success: true})
+    return res.status(200).json({ orders, success: true})
 }catch (e){
     return res.status(500).json({error: e.message,success: false})
 }
@@ -40,9 +40,6 @@ const getOrder = async(req,res)=>{
   try {
       const order = await Order.findById(id)
           .populate('user','name email phone')
-          .populate({
-              path: 'orderItems', populate: { path: 'product', populate: 'category' }
-          });
       if(!order) return res.status(400).json({error: "invalid id",success: false})
       return res.status(200).json({order: order, success: true})
   }catch (e) {

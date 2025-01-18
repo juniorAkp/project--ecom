@@ -44,34 +44,55 @@ const verifyPayment = async (req, res) => {
         return res.status(400).json({ message: "Reference parameter is required." });
     }
 
-    try {
-        // Send a GET request to Paystack's verify endpoint
-        const response = await axios.get(`https://api.paystack.co/transaction/verify/${reference}`, {
-            headers: {
-                Authorization: `Bearer ${process.env.PAYSTACK_SECRET}`,
-            },
-        });
-        if (response.data.status === "success") {
-            console.log(response.data)
-            // Optionally, you can store the transaction details in your database or finalize the order here
-            return res.status(200).json({
-                status: "success",
-                message: "Payment verification successful",
-                data: response.data.data,
-            });
+    const options = {
+        hostname: 'api.paystack.co',
+        port: 443,
+        path: `/transaction/verify/${reference}`, // Reference will be part of the path
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${process.env.PAYSTACK_SECRET}`,
+        },
+    };
 
-        } else {
-            return res.status(400).json({
-                status: "error",
-                message: "Transaction verification failed",
-            });
-        }
-    } catch (error) {
+    https.request(options, (response) => {
+        let data = '';
+
+        response.on('data', (chunk) => {
+            data += chunk;
+        });
+
+        response.on('end', async () => {
+            const parsedData = JSON.parse(data);
+
+            if (parsedData.status === "success") {
+                console.log(parsedData);
+                // Optionally, save the payment information into your database
+                const order = new Order({
+                    paymentReference: parsedData.data.reference,
+                    status: 'Paid',
+                    totalPrice: parsedData.data.amount / 100, // Convert from kobo to naira
+                    // Add more order details as necessary
+                });
+                await order.save();
+
+                return res.status(200).json({
+                    status: "success",
+                    message: "Payment verification successful",
+                    data: parsedData.data,
+                });
+            } else {
+                return res.status(400).json({
+                    status: "error",
+                    message: "Transaction verification failed",
+                });
+            }
+        });
+    }).on('error', (error) => {
         console.error("Error verifying transaction:", error);
         return res.status(500).json({
             status: "error",
             message: "Internal server error while verifying transaction.",
         });
-    }
-}
+    }).end();
+};
 module.exports = {paystack, verifyPayment}

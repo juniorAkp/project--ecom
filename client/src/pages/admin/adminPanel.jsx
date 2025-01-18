@@ -1,201 +1,178 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';  // Importing Link from react-router-dom// Sidebar component import
+import Header from '../../components/Header';
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import Footer from '../../components/Footer';
 
-const AddProduct = () => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [richDescription, setRichDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('');
-  const [isFeatured, setIsFeatured] = useState(false);
-  const [countInStock, setCountInStock] = useState('');
-  const [rating, setRating] = useState('');
-  const [reviews, setReviews] = useState('');
-  const [image, setImage] = useState(null);
-  const [categories, setCategories] = useState([]);
+const AdminDashboard = () => {
+  const [totalSales, setTotalSales] = useState(null);
+  const [userCount, setUserCount] = useState(null);
+  const [loadingSales, setLoadingSales] = useState(false);
+  const [loadingUserCount, setLoadingUserCount] = useState(false);
   const [error, setError] = useState(null);
 
+  // Toggling state for opening and closing sections
+  const [isSalesOpen, setIsSalesOpen] = useState(false);
+  const [isUserCountOpen, setIsUserCountOpen] = useState(false);
 
-
-  useEffect(() => {
-    // Fetch categories from the backend to populate the category dropdown
-    const fetchCategories = async () => {
-      const {data} = await axios.get('/admin/category')
-      setCategories(data.categories)
-    };
-    fetchCategories();
-  }, []);
-
-  const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+  // Fetch total sales data
+  const fetchTotalSales = async () => {
+    setLoadingSales(true);
+    try {
+      const { data } = await axios.get('/admin/total-sales');
+      setTotalSales(data.totalSales);
+    } catch (err) {
+      setError('Failed to fetch total sales');
+    } finally {
+      setLoadingSales(false);
+    }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('description', description);
-    formData.append('richDescription', richDescription);
-    formData.append('price', price);
-    formData.append('category', category);
-    formData.append('isFeatured', isFeatured);
-    formData.append('countInStock', countInStock);
-    formData.append('rating', rating);
-    formData.append('reviews', reviews);
-    formData.append('image', image);
-
+  // Fetch user count data
+  const fetchUserCount = async () => {
+    setLoadingUserCount(true);
     try {
-      const { data } = await axios.post('/admin/products', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', 
-        }})
-      if (data.success) {
-        alert('Product created successfully');
-        // Reset the form after successful submission
-        setName('');
-        setDescription('');
-        setRichDescription('');
-        setPrice('');
-        setCategory('');
-        setIsFeatured(false);
-        setCountInStock('');
-        setRating('');
-        setReviews('');
-        setImage(null);
-      } else {
-        setError(data.error);
-      }
+      const { data } = await axios.get('/admin/count-users');
+      setUserCount(data.users);
     } catch (err) {
-      setError('Error creating product');
+      setError('Failed to fetch user count');
+    } finally {
+      setLoadingUserCount(false);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-3xl font-bold mb-6">Add Product</h1>
-      {error && <div className="text-red-500 mb-4">{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium">Product Name</label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="price" className="block text-sm font-medium">Price</label>
-            <input
-              type="number"
-              id="price"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              required
-            />
-          </div>
-          <div className="col-span-2">
-            <label htmlFor="description" className="block text-sm font-medium">Description</label>
-            <textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              required
-            />
-          </div>
-          <div className="col-span-2">
-            <label htmlFor="richDescription" className="block text-sm font-medium">Rich Description</label>
-            <textarea
-              id="richDescription"
-              value={richDescription}
-              onChange={(e) => setRichDescription(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="category" className="block text-sm font-medium">Category</label>
-            <select
-              id="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              required
-            >
-              <option value="">Select Category</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="isFeatured" className="block text-sm font-medium">Featured Product</label>
-            <input
-              type="checkbox"
-              id="isFeatured"
-              checked={isFeatured}
-              onChange={(e) => setIsFeatured(e.target.checked)}
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <label htmlFor="countInStock" className="block text-sm font-medium">Count In Stock</label>
-            <input
-              type="number"
-              id="countInStock"
-              value={countInStock}
-              onChange={(e) => setCountInStock(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="rating" className="block text-sm font-medium">Rating</label>
-            <input
-              type="number"
-              id="rating"
-              value={rating}
-              onChange={(e) => setRating(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="reviews" className="block text-sm font-medium">Reviews</label>
-            <input
-              type="number"
-              id="reviews"
-              value={reviews}
-              onChange={(e) => setReviews(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-          <div className="col-span-2">
-            <label htmlFor="image" className="block text-sm font-medium">Product Image</label>
-            <input
-              type="file"
-              id="image"
-              onChange={handleImageChange}
-              className="mt-1 block w-full"
-              required
-            />
+    <>
+      <Header />
+      <div className="flex min-h-screen bg-gray-100">
+        {/* Main Content */}
+        <div className="flex-1  p-6 mt-16">
+          <div className="space-y-8">
+            {/* Hero Section */}
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-8 rounded-lg shadow-md text-white text-center">
+              <h1 className="text-4xl font-bold">Welcome to the Admin Dashboard</h1>
+              <p className="mt-4 text-lg">Manage categories, products, orders, and sales easily from here.</p>
+            </div>
+
+            {/* Dashboard Sections */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Categories Management */}
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                <h3 className="text-xl font-semibold text-gray-700">Categories</h3>
+                <div className="mt-4 space-y-4">
+                  <Link
+                    to="/add-category"
+                    className="block text-center text-white bg-green-600 hover:bg-green-700 py-3 rounded-md transition duration-300"
+                  >
+                    Add Category
+                  </Link>
+                  <Link
+                    to="/display-categories"
+                    className="block text-center text-white bg-blue-600 hover:bg-blue-700 py-3 rounded-md transition duration-300"
+                  >
+                    Display Categories
+                  </Link>
+                </div>
+              </div>
+
+              {/* Products Management */}
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                <h3 className="text-xl font-semibold text-gray-700">Products</h3>
+                <div className="mt-4 space-y-4">
+                  <Link
+                    to="/add-product"
+                    className="block text-center text-white bg-green-600 hover:bg-green-700 py-3 rounded-md transition duration-300"
+                  >
+                    Add Product
+                  </Link>
+                  <Link
+                    to="/display-product"
+                    className="block text-center text-white bg-blue-600 hover:bg-blue-700 py-3 rounded-md transition duration-300"
+                  >
+                    Display Product
+                  </Link>
+                </div>
+              </div>
+
+              {/* Orders Management */}
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                <h3 className="text-xl font-semibold text-gray-700">Orders</h3>
+                <div className="mt-4 space-y-4">
+                  <Link
+                    to="/view-orders"
+                    className="block text-center text-white bg-yellow-600 hover:bg-yellow-700 py-3 rounded-md transition duration-300"
+                  >
+                    View Orders
+                  </Link>
+                </div>
+              </div>
+
+              {/* Sales Overview */}
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                <h3 className="text-xl font-semibold text-gray-700">Sales Overview</h3>
+                <div className="mt-4">
+                  <button
+                    onClick={() => {
+                      setIsSalesOpen(!isSalesOpen);
+                      if (!isSalesOpen && !totalSales) {
+                        fetchTotalSales();
+                      }
+                    }}
+                    className="block text-center text-white bg-purple-600 hover:bg-purple-700 py-3 rounded-md transition duration-300"
+                  >
+                    {isSalesOpen ? 'Hide Total Sales' : 'View Total Sales'}
+                  </button>
+
+                  {isSalesOpen && (
+                    <div className="mt-4">
+                      {loadingSales ? (
+                        <p className="text-center text-gray-500">Loading...</p>
+                      ) : totalSales !== null ? (
+                        <p className="text-center text-gray-700">Total Sales: ${totalSales}</p>
+                      ) : (
+                        <p className="text-center text-gray-500">No sales data available.</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* User Count */}
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                <h3 className="text-xl font-semibold text-gray-700">User Count</h3>
+                <div className="mt-4">
+                  <button
+                    onClick={() => {
+                      setIsUserCountOpen(!isUserCountOpen);
+                      if (!isUserCountOpen && !userCount) {
+                        fetchUserCount();
+                      }
+                    }}
+                    className="block text-center text-white bg-teal-600 hover:bg-teal-700 py-3 rounded-md transition duration-300"
+                  >
+                    {isUserCountOpen ? 'Hide User Count' : 'View User Count'}
+                  </button>
+
+                  {isUserCountOpen && (
+                    <div className="mt-4">
+                      {loadingUserCount ? (
+                        <p className="text-center text-gray-500">Loading...</p>
+                      ) : userCount !== null ? (
+                        <p className="text-center text-gray-700">Total Users: {userCount}</p>
+                      ) : (
+                        <p className="text-center text-gray-500">No user count available.</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-              
-        <button
-          type="submit"
-          className="mt-4 w-full px-6 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none"
-        >
-          Create Product
-        </button>
-      </form>
-    </div>
-    
+      </div>
+      <Footer/>
+    </>
   );
 };
 
-export default AddProduct;
+export default AdminDashboard;

@@ -5,8 +5,7 @@ const categorySchema = new schema({
     name:{
         type: String,
         required: true
-    },
-    color: String
+    }
 })
 
 categorySchema.virtual('id').get(function () {

@@ -1,8 +1,8 @@
+import React, { useState, useEffect } from 'react';
 import { FaShoppingCart, FaUserCircle, FaBars, FaTimes } from 'react-icons/fa';
 import { useAuthStore } from '../store/AuthStore';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
 import { useCartStore } from '../store/CartStore';
+import axios from 'axios';
 
 const Header = ({ setProducts }) => {
   const { fetchCart, totalQuantity } = useCartStore();
@@ -41,25 +41,34 @@ const Header = ({ setProducts }) => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <header className="bg-gray-800 text-white fixed w-full z-20 top-0">
-      <nav className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+    <header className="bg-gray-900 text-white fixed w-full z-20 top-0 shadow-lg">
+      <nav className="container mx-auto px-6 sm:px-8 lg:px-12 py-4 flex justify-between items-center">
         {/* Logo */}
-        <a href="/" className="text-2xl font-bold">ShopLogo</a>
+        <a href="/" className="text-3xl font-bold tracking-wide text-indigo-500">
+          Shop<span className="text-white">Shopi</span>
+        </a>
 
-        {/* Mobile Hamburger Menu */}
-        <div className="md:hidden">
-          <button onClick={toggleMenu} className="text-2xl">
-            {isMenuOpen ? <FaTimes /> : <FaBars />}
-          </button>
-        </div>
+        {/* Hamburger Menu for Mobile */}
+        <button
+          onClick={toggleMenu}
+          className="md:hidden text-2xl focus:outline-none"
+          aria-label="Toggle menu"
+        >
+          {isMenuOpen ? <FaTimes /> : <FaBars />}
+        </button>
 
-        {/* Categories & Links for Larger Screens */}
-        <div className={`hidden md:flex space-x-6 items-center ${isMenuOpen ? 'block' : 'hidden'}`}>
-          <a href="/featured" className="text-white hover:text-gray-400">Featured</a>
+        {/* Links for Larger Screens */}
+        <div className="hidden md:flex space-x-6 items-center">
+          <a
+            href="/featured"
+            className="hover:text-indigo-500 transition duration-300"
+          >
+            Featured
+          </a>
           <select
             value={selectedCategory}
             onChange={handleCategoryChange}
-            className="px-3 py-2 bg-white text-gray-800 rounded-lg border border-gray-300"
+            className="bg-gray-800 text-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
@@ -75,41 +84,49 @@ const Header = ({ setProducts }) => {
           {user ? (
             <>
               <div className="relative">
-                <a href="/cart-page">
+                <a href="/cart-page" aria-label="Cart">
                   <FaShoppingCart className="text-2xl" />
                 </a>
                 {totalQuantity > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2">
+                  <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-2">
                     {totalQuantity}
                   </span>
                 )}
               </div>
-              <a href={user.isAdmin ? "/admin" : "/user-edit"}>
+              <a href={user.isAdmin ? '/admin' : '/user-edit'} aria-label="User Profile">
                 <FaUserCircle className="text-2xl" />
               </a>
               <button
                 onClick={logout}
-                className="text-sm font-medium hover:underline"
+                className="text-sm font-medium hover:underline focus:outline-none"
               >
                 Logout, {user.name}
               </button>
             </>
           ) : (
-            <a href="/login" className="text-sm font-medium hover:underline">
+            <a
+              href="/login"
+              className="text-sm font-medium hover:underline focus:outline-none"
+            >
               Log in
             </a>
           )}
         </div>
       </nav>
 
-      {/* Mobile Menu (when menu is open) */}
+      {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-gray-800 text-white py-4">
-          <a href="/feature" className="block px-4 py-2 hover:bg-gray-700">Featured</a>
+        <div className="md:hidden bg-gray-900 text-white py-4 px-6">
+          <a
+            href="/featured"
+            className="block py-2 px-4 hover:bg-gray-800 rounded transition"
+          >
+            Featured
+          </a>
           <select
             value={selectedCategory}
             onChange={handleCategoryChange}
-            className="block px-4 py-2 bg-white text-gray-800 rounded-lg border border-gray-300 mt-2 w-full"
+            className="block py-2 px-4 bg-gray-800 text-white rounded-lg border border-gray-600 mt-2 w-full focus:ring focus:ring-indigo-500"
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (

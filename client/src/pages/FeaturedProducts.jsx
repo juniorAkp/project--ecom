@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import axios from 'axios';
 import { useAuthStore } from '../store/AuthStore';
 import { useCartStore } from '../store/CartStore';
+import Footer from '../components/Footer';
 
 const FeaturedProducts = () => {
   const { user } = useAuthStore();
@@ -58,6 +59,7 @@ const FeaturedProducts = () => {
           </div>
         </div>
       </div>
+      <Footer/>
     </>
   );
 };
