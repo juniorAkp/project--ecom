@@ -30,7 +30,7 @@ const Homepage = () => {
         {/* Banner Section */}
         <div className="bg-green-100 py-6 px-4 text-center">
           <h2 className="text-2xl font-bold text-gray-800">
-            Grab Up to <span className="text-green-600">50% Off</span> on Selected Headphones
+            Grab Up to <span className="text-green-600">50% Off</span> on Selected Products
           </h2>
           <button className="mt-4 px-6 py-2 bg-green-600 text-white rounded-full shadow hover:bg-green-700 transition">
             Buy Now
@@ -39,7 +39,7 @@ const Homepage = () => {
 
         {/* Product Section */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">Headphones For You!</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-6">Products For You!</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((product) => (
               <div
