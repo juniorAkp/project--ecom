@@ -8,7 +8,7 @@ const CartPage = () => {
   const { user } = useAuthStore();
   const { cart, fetchCart, updateItemQuantity, removeItem } = useCartStore();
 
-  const calculateSubtotal = () => 
+  const calculateSubtotal = () =>
     cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
 
   useEffect(() => {
@@ -43,23 +43,27 @@ const CartPage = () => {
                 {cart.map((item) => (
                   <div
                     key={item._id}
-                    className="flex items-center justify-between p-4 bg-gray-100 rounded-lg shadow-sm hover:shadow-lg transition-all duration-200"
+                    className="flex flex-col sm:flex-row items-center sm:items-start justify-between p-4 bg-gray-100 rounded-lg shadow-sm hover:shadow-lg transition-all duration-200"
                   >
                     <div className="flex items-center space-x-4">
+                      {/* Product Image */}
                       <img
                         src={item.product.image}
                         alt={item.product.name}
                         className="w-20 h-20 object-cover rounded-md"
                       />
-                      <div>
+
+                      {/* Product Info */}
+                      <div className="flex-1">
                         <h3 className="text-lg font-semibold text-gray-900">{item.product.name}</h3>
                         <p className="text-sm text-gray-600">Ratings: {item.product.reviews || "N/A"}</p>
-                        
+
                         {/* Star Rating */}
                         <div className="flex items-center mt-2">
                           {renderStarRating(item.product.rating)}
                         </div>
 
+                        {/* Quantity Adjustment */}
                         <div className="flex items-center space-x-2 mt-2">
                           <button
                             onClick={() =>
@@ -88,23 +92,25 @@ const CartPage = () => {
                           </button>
                         </div>
 
-                        {/* Description below the quantity adjustment */}
+                        {/* Description */}
                         <p className="text-sm text-gray-600 mt-4">
                           {item.product.richDescription || "No description available."}
                         </p>
                       </div>
                     </div>
-                    <p className="text-xl font-semibold text-gray-900">
-                    GH¢ {(item.product.price * item.quantity).toFixed(2)}
-                    </p>
 
-                    {/* Remove Button */}
-                    <button
-                      onClick={() => removeItem(user._id, item.product._id)}
-                      className="text-red-500 hover:text-red-700 font-medium"
-                    >
-                      Remove
-                    </button>
+                    {/* Price & Remove Button */}
+                    <div className="mt-4 sm:mt-0 sm:ml-4 flex flex-col items-end">
+                      <p className="text-xl font-semibold text-gray-900">
+                        GH¢ {(item.product.price * item.quantity).toFixed(2)}
+                      </p>
+                      <button
+                        onClick={() => removeItem(user._id, item.product._id)}
+                        className="mt-2 text-red-500 hover:text-red-700 font-medium"
+                      >
+                        Remove
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
