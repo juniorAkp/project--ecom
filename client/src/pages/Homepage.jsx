@@ -10,6 +10,7 @@ const Homepage = () => {
   const { user } = useAuthStore();
   const { addItem } = useCartStore();
   const [products, setProducts] = useState([]);
+  const [hoveredProductId, setHoveredProductId] = useState(null);
 
   const getProducts = async () => {
     try {
@@ -45,29 +46,40 @@ const Homepage = () => {
             {products.map((product) => (
               <div
                 key={product._id}
-                className="bg-white rounded-lg shadow-md overflow-hidden group relative"
+                className="bg-white rounded-lg shadow-md overflow-hidden relative group"
+                onMouseEnter={() => setHoveredProductId(product._id)}
+                onMouseLeave={() => setHoveredProductId(null)}
               >
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-48 object-cover group-hover:opacity-75"
-                />
+                {/* Image Section */}
+                <div className="relative">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className={`w-full h-48 object-cover transition group-hover:blur-md ${
+                      hoveredProductId === product._id ? 'blur-md' : ''
+                    }`}
+                  />
+                  {hoveredProductId === product._id && (
+                    <button
+                      onClick={() => addItem(user._id, product._id)}
+                      className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 transition opacity-0 group-hover:opacity-100"
+                    >
+                      <FaCartPlus className="text-white text-2xl" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Product Info */}
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
-                  <p className="text-base font-medium text-gray-700">${product.price}</p>
+                  <p className="text-base font-medium text-gray-700">GH¢ {product.price}</p>
                 </div>
-                <button
-                  onClick={() => addItem(user._id, product._id)}
-                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
-                >
-                  <FaCartPlus />
-                </button>
               </div>
             ))}
           </div>
         </div>
       </main>
-      <Footer/>
+      <Footer />
     </>
   );
 };
