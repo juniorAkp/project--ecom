@@ -95,7 +95,7 @@ const CartPage = () => {
                       </div>
                     </div>
                     <p className="text-xl font-semibold text-gray-900">
-                      ${(item.product.price * item.quantity).toFixed(2)}
+                    GH¢ {(item.product.price * item.quantity).toFixed(2)}
                     </p>
 
                     {/* Remove Button */}
@@ -119,15 +119,11 @@ const CartPage = () => {
             <div className="space-y-4">
               <div className="flex justify-between text-lg font-medium text-gray-700">
                 <span>Subtotal</span>
-                <span>${calculateSubtotal().toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-lg font-medium text-gray-700">
-                <span>Tax (10%)</span>
-                <span>${(calculateSubtotal() * 0.1).toFixed(2)}</span>
+                <span>GH¢{calculateSubtotal().toFixed(2)}</span>
               </div>
               <div className="border-t border-gray-300 pt-4 mt-4 flex justify-between text-xl font-semibold text-gray-900">
                 <span>Total</span>
-                <span>${(calculateSubtotal() * 1.1).toFixed(2)}</span>
+                <span>GH¢{calculateSubtotal().toFixed(2)}</span>
               </div>
               <a href="/order-page">
                 <button
