@@ -85,7 +85,7 @@ const AddProduct = () => {
   return (
     <>
       <Header />
-      <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+      <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md mt-8">
         <h1 className="text-3xl font-bold mb-6">Add Product</h1>
         {error && <div className="text-red-500 mb-4">{error}</div>}
         <form onSubmit={handleSubmit}>

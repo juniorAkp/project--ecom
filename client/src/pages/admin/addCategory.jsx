@@ -2,11 +2,13 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import { useNavigate } from 'react-router-dom';
 
 const AddCategory = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState('');
-  const [color, setColor] = useState('');
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false); // State for loading spinner
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,8 +16,9 @@ const AddCategory = () => {
     // Prepare the data to be sent to the backend
     const categoryData = {
       name,
-      color,
     };
+
+    setLoading(true); // Start loading spinner
 
     try {
       const { data } = await axios.post('/admin/add-category', categoryData);
@@ -23,11 +26,14 @@ const AddCategory = () => {
         alert('Category created successfully');
         // Reset the form after successful submission
         setName('');
+        navigate('/')
       } else {
         setError(data.error);
       }
     } catch (err) {
       setError('Error creating category');
+    } finally {
+      setLoading(false); // Stop loading spinner
     }
   };
 
@@ -56,15 +62,42 @@ const AddCategory = () => {
             <button
               type="submit"
               className="mt-4 w-full px-6 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none"
+              disabled={loading} // Disable button while loading
             >
-              Create Category
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                  </svg>
+                  <span className="ml-2">Creating...</span>
+                </div>
+              ) : (
+                'Create Category'
+              )}
             </button>
           </form>
         </div>
       </div>
       <Footer />
     </>
-  )
+  );
 };
 
 export default AddCategory;

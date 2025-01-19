@@ -46,55 +46,56 @@ const DisplayAllProducts = () => {
   return (
     <>
       <Header />
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md">
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md w-full">
           <h1 className="text-3xl font-bold mb-6">All Products</h1>
           {error && <div className="text-red-500 mb-4">{error}</div>}
 
           {products.length === 0 ? (
             <div>No products available.</div>
           ) : (
-            <table className="min-w-full table-auto">
-              <thead>
-                <tr className="border-b">
-                  <th className="px-4 py-2 text-left">Product Name</th>
-                  <th className="px-4 py-2 text-left">Price</th>
-                  <th className="px-4 py-2 text-left">Category</th>
-                  <th className="px-4 py-2 text-left">Stock</th>
-                  <th className="px-4 py-2 text-left">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((product) => (
-                  <tr key={product.id} className="border-b">
-                    <td className="px-4 py-2">{product.name}</td>
-                    <td className="px-4 py-2">${product.price}</td>
-                    <td className="px-4 py-2">{product.category.name}</td>
-                    <td className="px-4 py-2">{product.countInStock}</td>
-                    <td className="px-4 py-2 flex space-x-2">
-                      <Link
-                        to={`/update-product/${product.id}`}
-                        className="px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none"
-                      >
-                        Update
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(product.id)}
-                        className="px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none"
-                      >
-                        Delete
-                      </button>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="min-w-full table-auto">
+                <thead>
+                  <tr className="border-b">
+                    <th className="px-4 py-2 text-left">Product Name</th>
+                    <th className="px-4 py-2 text-left">Price</th>
+                    <th className="px-4 py-2 text-left">Category</th>
+                    <th className="px-4 py-2 text-left">Stock</th>
+                    <th className="px-4 py-2 text-left">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {products.map((product) => (
+                    <tr key={product.id} className="border-b">
+                      <td className="px-4 py-2">{product.name}</td>
+                      <td className="px-4 py-2">${product.price}</td>
+                      <td className="px-4 py-2">{product.category.name}</td>
+                      <td className="px-4 py-2">{product.countInStock}</td>
+                      <td className="px-4 py-2 flex flex-wrap space-x-2 justify-start">
+                        <Link
+                          to={`/update-product/${product.id}`}
+                          className="px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none"
+                        >
+                          Update
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(product.id)}
+                          className="px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>
       <Footer />
     </>
-
   );
 };
 

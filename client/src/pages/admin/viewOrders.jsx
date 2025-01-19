@@ -109,7 +109,6 @@ const ViewOrders = () => {
           </div>
         )}
       </div>
-      <Footer />
     </>
 
   );
