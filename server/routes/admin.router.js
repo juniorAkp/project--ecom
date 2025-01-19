@@ -15,7 +15,7 @@ router.get('/user',getUsers)
 
 //product routes
 router.post('/products' ,upload.single('image'), createProducts)
-router.put('/products/:id',updateProduct)
+router.put('/product-update/:id',upload.single('image'),updateProduct)
 router.delete('/delete-product/:id',deleteProduct)
 router.get('/products/:id',getProduct)
 router.get('/products/count',getProductCount)

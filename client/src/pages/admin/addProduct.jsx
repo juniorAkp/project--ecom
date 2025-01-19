@@ -18,13 +18,16 @@ const AddProduct = () => {
   const [image, setImage] = useState(null);
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
-
+  const [loading, setLoading] = useState(false); // Loading state
 
   useEffect(() => {
-    // Fetch categories from the backend to populate the category dropdown
     const fetchCategories = async () => {
-      const { data } = await axios.get('/admin/category')
-      setCategories(data.categories)
+      try {
+        const { data } = await axios.get('/admin/category');
+        setCategories(data.categories);
+      } catch (err) {
+        setError('Failed to fetch categories.');
+      }
     };
     fetchCategories();
   }, []);
@@ -35,6 +38,7 @@ const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
 
     const formData = new FormData();
     formData.append('name', name);
@@ -52,11 +56,11 @@ const AddProduct = () => {
       const { data } = await axios.post('/admin/products', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-        }
-      })
+        },
+      });
       if (data.success) {
         alert('Product created successfully');
-        // Reset the form after successful submission
+        // Reset form fields
         setName('');
         setDescription('');
         setRichDescription('');
@@ -67,12 +71,14 @@ const AddProduct = () => {
         setRating('');
         setReviews('');
         setImage(null);
-        navigate('/admin')
+        navigate('/admin');
       } else {
         setError(data.error);
       }
     } catch (err) {
       setError('Error creating product');
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -195,19 +201,39 @@ const AddProduct = () => {
 
           <button
             type="submit"
-            className="mt-4 w-full px-6 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none"
+            className="mt-4 w-full px-6 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none flex items-center justify-center"
+            disabled={loading} // Disable button while loading
           >
-            Create Product
+            {loading ? (
+              <svg
+                className="w-5 h-5 mr-2 text-white animate-spin"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C3.164 0 0 8 0 12h4zm2 5.292C7.205 20.223 8.518 21 10 21c3.5 0 6-2.5 6-6h4c0 6.633-5.367 12-12 12-2.29 0-4.392-.64-6.215-1.733L6 17.292z"
+                ></path>
+              </svg>
+            ) : (
+              'Create Product'
+            )}
           </button>
         </form>
       </div>
       <Footer />
     </>
-
-
   );
 };
 
 export default AddProduct;
-
-

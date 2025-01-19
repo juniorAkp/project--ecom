@@ -43,6 +43,7 @@ const UpdateProduct = () => {
           setCountInStock(product.countInStock);
           setRating(product.rating);
           setReviews(product.reviews);
+          setImage(product.image)
         } else {
           setError('Product not found');
         }
@@ -70,12 +71,10 @@ const UpdateProduct = () => {
     formData.append('countInStock', countInStock);
     formData.append('rating', rating);
     formData.append('reviews', reviews);
-    if (image) {
-      formData.append('image', image);
-    }
+    formData.append('image', image);
 
     try {
-      const { data } = await axios.put(`/admin/products/${id}`, formData, {
+      const { data } = await axios.put(`/admin/product-update/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

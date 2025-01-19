@@ -68,42 +68,50 @@ const storage = multer.diskStorage({
     }
   };
   
-
-const updateProduct = async (req, res) => {
-  const { id } = req.params;
-  const { name, description, richDescription, price, category, isFeatured, countInStock, rating, reviews } = req.body;
-  const image = req.file;
-
-  if (!mongoose.isValidObjectId(id)) {
-    return res.status(400).json({ error: "Invalid product ID", success: false });
-  }
-
-  try {
-    const updateData = { name, description, richDescription, price, category, isFeatured, countInStock, rating, reviews };
-
-    if (image) {
-      const result = await cloudinary.uploader.upload(image.path, {
-        folder: "products",
-      });
-      updateData.image = result.secure_url;
+  const updateProduct = async (req, res) => {
+    const { id } = req.params;
+    const { name, description, richDescription, price, category, isFeatured, countInStock, rating, reviews } = req.body;
+  
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({ error: "Invalid product ID", success: false });
     }
-
-    if (category && !mongoose.isValidObjectId(category)) {
-      return res.status(400).json({ error: "Invalid category ID", success: false });
+  
+    try {
+      const updateData = { name, description, richDescription, price, category, isFeatured, countInStock, rating, reviews };
+  
+      // If a new image file is uploaded
+      if (req.file) {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+          folder: "products",
+        });
+        updateData.image = result.secure_url;
+      }
+  
+      // Validate category ID
+      if (category) {
+        if (!mongoose.isValidObjectId(category)) {
+          return res.status(400).json({ error: "Invalid category ID", success: false });
+        }
+  
+        const categoryExists = await Category.findById(category);
+        if (!categoryExists) {
+          return res.status(404).json({ error: "Category not found", success: false });
+        }
+      }
+  
+      // Update product in the database
+      const updatedProduct = await Product.findByIdAndUpdate(id, updateData, { new: true });
+  
+      if (!updatedProduct) {
+        return res.status(404).json({ error: "Product not found", success: false });
+      }
+  
+      return res.status(200).json({ message: "Product updated successfully", product: updatedProduct, success: true });
+    } catch (error) {
+      return res.status(500).json({ error: error.message, success: false });
     }
-
-    const updatedProduct = await Product.findByIdAndUpdate(id, updateData, { new: true });
-
-    if (!updatedProduct) {
-      return res.status(404).json({ error: "Product not found", success: false });
-    }
-
-    return res.status(200).json({ message: "Product updated successfully", product: updatedProduct, success: true });
-  } catch (error) {
-    return res.status(500).json({ error: error.message, success: false });
-  }
-};
-
+  };
+  
 const deleteProduct = async (req, res) => {
   const { id } = req.params;
 
