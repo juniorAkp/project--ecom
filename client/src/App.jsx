@@ -25,7 +25,7 @@ import UpdateCategory from './pages/admin/updateCategory.jsx';
 import ViewOrders from './pages/admin/viewOrders.jsx';
 import UpdateOrderStatus from './pages/admin/updateOrder.jsx';
 
-axios.defaults.baseURL = 'https://project-ecom-x7fx.onrender.com'
+axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_BACKEND_URL
 axios.defaults.withCredentials = true;
 
 

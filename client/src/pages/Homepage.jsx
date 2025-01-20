@@ -5,12 +5,14 @@ import axios from 'axios';
 import { useAuthStore } from '../store/AuthStore';
 import { useCartStore } from '../store/CartStore';
 import Footer from '../components/Footer';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const Homepage = () => {
   const { user } = useAuthStore();
   const { addItem } = useCartStore();
   const [products, setProducts] = useState([]);
-  const [hoveredProductId, setHoveredProductId] = useState(null);
 
   const getProducts = async () => {
     try {
@@ -25,18 +27,37 @@ const Homepage = () => {
     getProducts();
   }, [user]);
 
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+  };
+
   return (
     <>
       <Header setProducts={setProducts} />
       <main className="bg-gray-50 min-h-screen pt-16">
-        {/* Banner Section */}
-        <div className="bg-green-100 py-6 px-4 text-center">
-          <h2 className="text-2xl font-bold text-gray-800">
-            Grab Up to <span className="text-green-600">50% Off</span> on Selected Products
-          </h2>
-          <button className="mt-4 px-6 py-2 bg-green-600 text-white rounded-full shadow hover:bg-green-700 transition">
-            Buy Now
-          </button>
+        {/* Image Slider Section */}
+        <div className="bg-white py-6 px-4">
+          <Slider {...sliderSettings}>
+            {products.map((product) => (
+              <div key={product._id} className="relative">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-96 object-cover rounded-lg"
+                />
+                <div className="absolute inset-0 flex flex-col justify-end bg-black bg-opacity-40 p-4">
+                  <h3 className="text-lg font-semibold text-white">{product.name}</h3>
+                  <p className="text-base font-medium text-white">GH¢ {product.price}</p>
+                </div>
+              </div>
+            ))}
+          </Slider>
         </div>
 
         {/* Product Section */}
@@ -47,26 +68,20 @@ const Homepage = () => {
               <div
                 key={product._id}
                 className="bg-white rounded-lg shadow-md overflow-hidden relative group"
-                onMouseEnter={() => setHoveredProductId(product._id)}
-                onMouseLeave={() => setHoveredProductId(null)}
               >
                 {/* Image Section */}
                 <div className="relative">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className={`w-full h-48 object-cover transition group-hover:blur-md ${
-                      hoveredProductId === product._id ? 'blur-md' : ''
-                    }`}
+                    className="w-full h-48 object-cover transition group-hover:blur-md"
                   />
-                  {hoveredProductId === product._id && (
-                    <button
-                      onClick={() => addItem(user._id, product._id)}
-                      className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 transition opacity-0 group-hover:opacity-100"
-                    >
-                      <FaCartPlus className="text-white text-2xl" />
-                    </button>
-                  )}
+                  <button
+                    onClick={() => addItem(user._id, product._id)}
+                    className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition"
+                  >
+                    <FaCartPlus className="text-white text-2xl" />
+                  </button>
                 </div>
 
                 {/* Product Info */}
