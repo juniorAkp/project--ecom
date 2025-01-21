@@ -56,7 +56,7 @@ const CartPage = () => {
                       {/* Product Info */}
                       <div className="flex-1">
                         <h3 className="text-lg font-semibold text-gray-900">{item.product.name}</h3>
-                        <p className="text-sm text-gray-600">Ratings: {item.product.reviews || "N/A"}</p>
+                        <p className="text-sm text-gray-600">Reviews: {item.product.reviews || "N/A"}</p>
 
                         {/* Star Rating */}
                         <div className="flex items-center mt-2">
