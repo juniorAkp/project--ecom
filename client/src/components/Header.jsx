@@ -42,33 +42,36 @@ const Header = ({ setProducts }) => {
 
   return (
     <header className="bg-gray-900 text-white fixed w-full z-20 top-0 shadow-lg">
-      <nav className="container mx-auto px-6 sm:px-8 lg:px-12 py-4 flex justify-between items-center">
+      <nav className="container mx-auto px-4 sm:px-8 lg:px-12 py-3 flex justify-between items-center">
         {/* Logo */}
-        <a href="/" className="text-3xl font-bold tracking-wide text-indigo-500">
-        Luminaria
+        <a
+          href="/"
+          className="text-2xl md:text-3xl font-bold tracking-wide text-indigo-500"
+        >
+          Luminaria
         </a>
 
         {/* Hamburger Menu for Mobile */}
         <button
           onClick={toggleMenu}
-          className="md:hidden text-2xl focus:outline-none"
+          className="md:hidden text-xl sm:text-2xl focus:outline-none"
           aria-label="Toggle menu"
         >
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
 
         {/* Links for Larger Screens */}
-        <div className="hidden md:flex space-x-6 items-center">
+        <div className="hidden md:flex space-x-4 items-center">
           <a
             href="/featured"
-            className="hover:text-indigo-500 transition duration-300"
+            className="text-sm sm:text-base hover:text-indigo-500 transition duration-300"
           >
             Featured
           </a>
           <select
             value={selectedCategory}
             onChange={handleCategoryChange}
-            className="bg-gray-800 text-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+            className="bg-gray-800 text-sm sm:text-base text-gray-200 rounded-lg px-2 sm:px-3 py-1 sm:py-2 focus:outline-none focus:ring focus:ring-indigo-500"
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
@@ -80,25 +83,28 @@ const Header = ({ setProducts }) => {
         </div>
 
         {/* User and Cart */}
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-4">
           {user ? (
             <>
               <div className="relative">
                 <a href="/cart-page" aria-label="Cart">
-                  <FaShoppingCart className="text-2xl" />
+                  <FaShoppingCart className="text-xl sm:text-2xl" />
                 </a>
                 {totalQuantity > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-2">
+                  <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-1.5 sm:px-2">
                     {totalQuantity}
                   </span>
                 )}
               </div>
-              <a href={user.isAdmin ? '/admin' : '/user-edit'} aria-label="User Profile">
-                <FaUserCircle className="text-2xl" />
+              <a
+                href={user.isAdmin ? '/admin' : '/user-edit'}
+                aria-label="User Profile"
+              >
+                <FaUserCircle className="text-xl sm:text-2xl" />
               </a>
               <button
                 onClick={logout}
-                className="text-sm font-medium hover:underline focus:outline-none"
+                className="text-xs sm:text-sm font-medium hover:underline focus:outline-none"
               >
                 Logout, {user.name}
               </button>
@@ -106,7 +112,7 @@ const Header = ({ setProducts }) => {
           ) : (
             <a
               href="/login"
-              className="text-sm font-medium hover:underline focus:outline-none"
+              className="text-xs sm:text-sm font-medium hover:underline focus:outline-none"
             >
               Log in
             </a>
@@ -116,17 +122,17 @@ const Header = ({ setProducts }) => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-gray-900 text-white py-4 px-6">
+        <div className="md:hidden bg-gray-900 text-white py-4 px-4">
           <a
             href="/featured"
-            className="block py-2 px-4 hover:bg-gray-800 rounded transition"
+            className="block py-2 px-3 text-sm hover:bg-gray-800 rounded transition"
           >
             Featured
           </a>
           <select
             value={selectedCategory}
             onChange={handleCategoryChange}
-            className="block py-2 px-4 bg-gray-800 text-white rounded-lg border border-gray-600 mt-2 w-full focus:ring focus:ring-indigo-500"
+            className="block py-2 px-3 text-sm bg-gray-800 text-white rounded-lg border border-gray-600 mt-2 w-full focus:ring focus:ring-indigo-500"
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
