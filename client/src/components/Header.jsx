@@ -45,7 +45,7 @@ const Header = ({ setProducts }) => {
       <nav className="container mx-auto px-6 sm:px-8 lg:px-12 py-4 flex justify-between items-center">
         {/* Logo */}
         <a href="/" className="text-3xl font-bold tracking-wide text-indigo-500">
-          Shop
+        Luminaria
         </a>
 
         {/* Hamburger Menu for Mobile */}
