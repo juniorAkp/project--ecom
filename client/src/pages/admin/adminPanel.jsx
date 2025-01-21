@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';  // Importing Link from react-router-dom// Sidebar component import
+import { Link } from 'react-router-dom';
 import Header from '../../components/Header';
 import axios from 'axios';
 import Footer from '../../components/Footer';
@@ -7,13 +7,15 @@ import Footer from '../../components/Footer';
 const AdminDashboard = () => {
   const [totalSales, setTotalSales] = useState(null);
   const [userCount, setUserCount] = useState(null);
+  const [productCount, setProductCount] = useState(null); // New state for product count
   const [loadingSales, setLoadingSales] = useState(false);
   const [loadingUserCount, setLoadingUserCount] = useState(false);
+  const [loadingProductCount, setLoadingProductCount] = useState(false); // Loading state for product count
   const [error, setError] = useState(null);
 
-  // Toggling state for opening and closing sections
   const [isSalesOpen, setIsSalesOpen] = useState(false);
   const [isUserCountOpen, setIsUserCountOpen] = useState(false);
+  const [isProductCountOpen, setIsProductCountOpen] = useState(false); // State for toggling product count
 
   // Fetch total sales data
   const fetchTotalSales = async () => {
@@ -41,20 +43,30 @@ const AdminDashboard = () => {
     }
   };
 
+  // Fetch product count data
+  const fetchProductCount = async () => {
+    setLoadingProductCount(true);
+    try {
+      const { data } = await axios.get('/admin/count-products');
+      setProductCount(data.products);
+    } catch (err) {
+      setError('Failed to fetch product count');
+    } finally {
+      setLoadingProductCount(false);
+    }
+  };
+
   return (
     <>
       <Header />
       <div className="flex min-h-screen bg-gray-100">
-        {/* Main Content */}
-        <div className="flex-1  p-6 mt-16">
+        <div className="flex-1 p-6 mt-16">
           <div className="space-y-8">
-            {/* Hero Section */}
             <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-8 rounded-lg shadow-md text-white text-center">
               <h1 className="text-4xl font-bold">Welcome to the Admin Dashboard</h1>
               <p className="mt-4 text-lg">Manage categories, products, orders, and sales easily from here.</p>
             </div>
 
-            {/* Dashboard Sections */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* Categories Management */}
               <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
@@ -166,11 +178,41 @@ const AdminDashboard = () => {
                   )}
                 </div>
               </div>
+
+              {/* Product Count */}
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                <h3 className="text-xl font-semibold text-gray-700">Product Count</h3>
+                <div className="mt-4">
+                  <button
+                    onClick={() => {
+                      setIsProductCountOpen(!isProductCountOpen);
+                      if (!isProductCountOpen && !productCount) {
+                        fetchProductCount();
+                      }
+                    }}
+                    className="block text-center text-white bg-orange-600 hover:bg-orange-700 py-3 rounded-md transition duration-300"
+                  >
+                    {isProductCountOpen ? 'Hide Product Count' : 'View Product Count'}
+                  </button>
+
+                  {isProductCountOpen && (
+                    <div className="mt-4">
+                      {loadingProductCount ? (
+                        <p className="text-center text-gray-500">Loading...</p>
+                      ) : productCount !== null ? (
+                        <p className="text-center text-gray-700">Total Products: {productCount}</p>
+                      ) : (
+                        <p className="text-center text-gray-500">No product count available.</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 };

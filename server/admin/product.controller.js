@@ -139,9 +139,9 @@ const deleteProduct = async (req, res) => {
 
 const getProductCount = async (req, res) => {
   try {
-    const productCount = await Product.countDocuments();
+    const products = await Product.countDocuments();
 
-    return res.status(200).json({ count: productCount, success: true });
+    return res.status(200).json({products, success: true });
   } catch (error) {
     return res.status(500).json({ error: error.message, success: false });
   }

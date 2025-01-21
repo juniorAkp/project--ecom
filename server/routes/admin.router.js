@@ -18,7 +18,7 @@ router.post('/products' ,upload.single('image'), createProducts)
 router.put('/product-update/:id',upload.single('image'),updateProduct)
 router.delete('/delete-product/:id',deleteProduct)
 router.get('/products/:id',getProduct)
-router.get('/products/count',getProductCount)
+router.get('/count-products',getProductCount)
 
 //category routes
 router.put('/category/:id',updateCategory)
