@@ -13,7 +13,32 @@ const Homepage = () => {
   const { user } = useAuthStore();
   const { addItem } = useCartStore();
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false);
+
+  // Static banners
+  const staticBanners = [
+    {
+      id: 'banner1',
+      type: 'banner',
+      title: 'Get 50% Off Products!',
+      description: 'Hurry! Limited Time Offer on Select Items.',
+      image: '/images/image1.avif', // Replace with actual banner image URL
+    },
+    {
+      id: 'banner2',
+      type: 'banner',
+      title: 'Free Shipping on Orders Over GH¢100',
+      description: 'Shop more and save on shipping costs!',
+      image: '/images/image2.jpg',
+    },
+    {
+      id: 'banner3',
+      type: 'banner',
+      title: 'Get latest candles',
+      description: 'Browse latest candle collections!',
+      image: '/images/image3.jpg',
+    },
+  ];
 
   const getProducts = async () => {
     try {
@@ -39,15 +64,17 @@ const Homepage = () => {
   };
 
   const handleAddToCart = async (productId) => {
-    setLoading(true); // Set loading state to true
+    setLoading(true);
     try {
-      await addItem(user._id, productId); // Adding item to cart
+      await addItem(user._id, productId);
     } catch (error) {
       console.error('Error adding item to cart:', error);
     } finally {
-      setLoading(false); // Set loading state to false once the process is complete
+      setLoading(false);
     }
   };
+
+  const sliderContent = [...staticBanners]; 
 
   return (
     <>
@@ -56,19 +83,35 @@ const Homepage = () => {
         {/* Image Slider Section */}
         <div className="bg-white py-6 px-4">
           <Slider {...sliderSettings}>
-            {products.map((product) => (
-              <div key={product._id} className="relative">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-96 object-cover rounded-lg"
-                />
-                <div className="absolute inset-0 flex flex-col justify-end bg-black bg-opacity-40 p-4">
-                  <h3 className="text-lg font-semibold text-white">{product.name}</h3>
-                  <p className="text-base font-medium text-white">GH¢ {product.price}</p>
+            {sliderContent.map((item) =>
+              item.type === 'banner' ? (
+                // Render static banners
+                <div key={item.id} className="relative">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-96 object-cover rounded-lg"
+                  />
+                  <div className="absolute inset-0 flex flex-col justify-end bg-black bg-opacity-40 p-4">
+                    <h3 className="text-2xl font-bold text-white">{item.title}</h3>
+                    <p className="text-lg text-white">{item.description}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ) : (
+                // Render product images
+                <div key={item._id} className="relative">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-96 object-cover rounded-lg"
+                  />
+                  <div className="absolute inset-0 flex flex-col justify-end bg-black bg-opacity-40 p-4">
+                    <h3 className="text-lg font-semibold text-white">{item.name}</h3>
+                    <p className="text-base font-medium text-white">GH¢ {item.price}</p>
+                  </div>
+                </div>
+              )
+            )}
           </Slider>
         </div>
 
@@ -89,12 +132,12 @@ const Homepage = () => {
                     className="w-full h-48 object-cover transition group-hover:blur-md"
                   />
                   <button
-                    onClick={() => handleAddToCart(product._id)} // Trigger add to cart
+                    onClick={() => handleAddToCart(product._id)}
                     className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition"
-                    disabled={loading} // Disable the button while loading
+                    disabled={loading}
                   >
                     {loading ? (
-                      <span className="text-white text-xl">Adding...</span> // Loading text
+                      <span className="text-white text-xl">Adding...</span>
                     ) : (
                       <FaCartPlus className="text-white text-2xl" />
                     )}
