@@ -51,7 +51,7 @@ const Footer = () => {
             </li>
             <li>
               <a
-                href="/terms"
+                href="/terms-and-conditions"
                 className="text-gray-400 hover:text-white transition"
               >
                 Terms of Service

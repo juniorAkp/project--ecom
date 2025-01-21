@@ -24,6 +24,7 @@ import ManageCategories from './pages/admin/displayCategories.jsx';
 import UpdateCategory from './pages/admin/updateCategory.jsx';
 import ViewOrders from './pages/admin/viewOrders.jsx';
 import UpdateOrderStatus from './pages/admin/updateOrder.jsx';
+import TermsAndConditions from './pages/static/TermsAndConditions.jsx';
 
 axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_BACKEND_URL
 axios.defaults.withCredentials = true;
@@ -181,6 +182,9 @@ const App = () => {
             <CartPage />
           </ProtectedRoute>
 
+        } />
+        <Route path='/terms-and-conditions' element={
+            <TermsAndConditions />
         } />
 
 
