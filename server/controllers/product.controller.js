@@ -13,7 +13,7 @@ const getProduct = async(req,res)=>{
 
 const products = async(req,res)=>{
   try {
-    const products = await Product.find();
+    const products = await Product.find().populate('category','name');
     if(!products) return res.status(200).json({message:"no products",success: true,data:[]})
     return res.status(200).json({products: products,success: true})
 }catch (e) {

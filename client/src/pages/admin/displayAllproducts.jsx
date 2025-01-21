@@ -13,6 +13,7 @@ const DisplayAllProducts = () => {
     const fetchProducts = async () => {
       try {
         const { data } = await axios.get('/api/products');
+        console.log(data.products)
         if (data.success) {
           setProducts(data.products);
         } else {
@@ -70,7 +71,7 @@ const DisplayAllProducts = () => {
                     <tr key={product.id} className="border-b">
                       <td className="px-4 py-2">{product.name}</td>
                       <td className="px-4 py-2">GH¢ {product.price}</td>
-                      <td className="px-4 py-2">{product.category}</td>
+                      <td className="px-4 py-2">{product.category.name}</td>
                       <td className="px-4 py-2">{product.countInStock}</td>
                       <td className="px-4 py-2 flex flex-wrap space-x-2 justify-start">
                         <Link
