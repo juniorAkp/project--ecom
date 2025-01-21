@@ -69,7 +69,7 @@ const DisplayAllProducts = () => {
                   {products.map((product) => (
                     <tr key={product.id} className="border-b">
                       <td className="px-4 py-2">{product.name}</td>
-                      <td className="px-4 py-2">${product.price}</td>
+                      <td className="px-4 py-2">GH¢ {product.price}</td>
                       <td className="px-4 py-2">{product.category}</td>
                       <td className="px-4 py-2">{product.countInStock}</td>
                       <td className="px-4 py-2 flex flex-wrap space-x-2 justify-start">
