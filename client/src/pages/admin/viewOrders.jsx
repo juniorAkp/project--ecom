@@ -80,7 +80,7 @@ const ViewOrders = () => {
                   <tr key={order.id} className="border-b">
                     <td className="px-2 py-1 md:px-4 md:py-2">{order.id}</td>
                     <td className="px-2 py-1 md:px-4 md:py-2">{order.user?.name || 'N/A'}</td>
-                    <td className="px-2 py-1 md:px-4 md:py-2">${order.totalPrice.toFixed(2)}</td>
+                    <td className="px-2 py-1 md:px-4 md:py-2">GH¢ {order.totalPrice.toFixed(2)}</td>
                     <td className="px-2 py-1 md:px-4 md:py-2">{order.status}</td>
                     <td className="px-2 py-1 md:px-4 md:py-2 space-y-1 md:space-y-0 md:space-x-2">
                       <button

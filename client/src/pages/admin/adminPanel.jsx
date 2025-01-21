@@ -128,7 +128,7 @@ const AdminDashboard = () => {
                       {loadingSales ? (
                         <p className="text-center text-gray-500">Loading...</p>
                       ) : totalSales !== null ? (
-                        <p className="text-center text-gray-700">Total Sales: ${totalSales}</p>
+                        <p className="text-center text-gray-700">Total Sales: GH¢ {totalSales}</p>
                       ) : (
                         <p className="text-center text-gray-500">No sales data available.</p>
                       )}
