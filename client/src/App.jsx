@@ -26,6 +26,7 @@ import ViewOrders from './pages/admin/viewOrders.jsx';
 import UpdateOrderStatus from './pages/admin/updateOrder.jsx';
 import TermsAndConditions from './pages/static/TermsAndConditions.jsx';
 import PrivacyPolicy from './pages/static/PrivacyPolicy.jsx';
+import ContactUs from './pages/static/ContactUs.jsx';
 
 axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_BACKEND_URL
 axios.defaults.withCredentials = true;
@@ -189,6 +190,9 @@ const App = () => {
         } />
         <Route path='/privacy-policy' element={
             <PrivacyPolicy />
+        } />
+        <Route path='/contact-us' element={
+            <ContactUs />
         } />
 
 
