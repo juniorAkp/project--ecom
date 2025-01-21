@@ -8,8 +8,9 @@ import Footer from '../components/Footer';
 
 const FeaturedProducts = () => {
   const { user } = useAuthStore();
-  const {addItem} = useCartStore();
+  const { addItem } = useCartStore();
   const [products, setProduct] = useState([]);
+  const [loadingProductId, setLoadingProductId] = useState(null); // Loading state for specific product
 
   // Fetch products from the API
   const getProducts = async () => {
@@ -21,17 +22,25 @@ const FeaturedProducts = () => {
     }
   };
 
-
   useEffect(() => {
     getProducts();
-  },[user]); 
+  }, [user]);
 
   // Handle adding product to the cart
-  
+  const handleAddToCart = async (productId) => {
+    setLoadingProductId(productId); // Set loading for specific product
+    try {
+      await addItem(user._id, productId); // Add item to the cart
+    } catch (error) {
+      console.error('Error adding item to cart:', error);
+    } finally {
+      setLoadingProductId(null); // Reset loading state
+    }
+  };
 
   return (
     <>
-       <Header /> 
+      <Header />
       <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
           <h2 className="sr-only">Products</h2>
@@ -49,17 +58,22 @@ const FeaturedProducts = () => {
                 </a>
                 {/* Add to Cart button */}
                 <button
-                  onClick={() => addItem(user._id,product._id)}
+                  onClick={() => handleAddToCart(product._id)} // Use handleAddToCart to add item
                   className="absolute bottom-4 right-4 px-4 py-2 bg-blue-600 text-white rounded-lg flex items-center space-x-2 opacity-100 transition-opacity"
+                  disabled={loadingProductId === product._id} // Disable the button if loading
                 >
-                  <FaCartPlus />
+                  {loadingProductId === product._id ? (
+                    <span>Adding...</span> // Show loading text while adding
+                  ) : (
+                    <FaCartPlus />
+                  )}
                 </button>
               </div>
             ))}
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 };

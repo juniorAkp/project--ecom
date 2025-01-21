@@ -13,6 +13,7 @@ const Homepage = () => {
   const { user } = useAuthStore();
   const { addItem } = useCartStore();
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false); // Loading state
 
   const getProducts = async () => {
     try {
@@ -35,6 +36,17 @@ const Homepage = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
+  };
+
+  const handleAddToCart = async (productId) => {
+    setLoading(true); // Set loading state to true
+    try {
+      await addItem(user._id, productId); // Adding item to cart
+    } catch (error) {
+      console.error('Error adding item to cart:', error);
+    } finally {
+      setLoading(false); // Set loading state to false once the process is complete
+    }
   };
 
   return (
@@ -77,10 +89,15 @@ const Homepage = () => {
                     className="w-full h-48 object-cover transition group-hover:blur-md"
                   />
                   <button
-                    onClick={() => addItem(user._id, product._id)}
+                    onClick={() => handleAddToCart(product._id)} // Trigger add to cart
                     className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition"
+                    disabled={loading} // Disable the button while loading
                   >
-                    <FaCartPlus className="text-white text-2xl" />
+                    {loading ? (
+                      <span className="text-white text-xl">Adding...</span> // Loading text
+                    ) : (
+                      <FaCartPlus className="text-white text-2xl" />
+                    )}
                   </button>
                 </div>
 
