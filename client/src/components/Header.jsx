@@ -63,6 +63,12 @@ const Header = ({ setProducts }) => {
         {/* Links for Larger Screens */}
         <div className="hidden md:flex space-x-4 items-center">
           <a
+            href="/reviews"
+            className="text-sm sm:text-base hover:text-indigo-500 transition duration-300"
+          >
+            Reviews
+          </a>
+          <a
             href="/featured"
             className="text-sm sm:text-base hover:text-indigo-500 transition duration-300"
           >
@@ -123,6 +129,12 @@ const Header = ({ setProducts }) => {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-gray-900 text-white py-4 px-4">
+          <a
+            href="/reviews"
+            className="block py-2 px-3 text-sm hover:bg-gray-800 rounded transition"
+          >
+            Reviews
+          </a>
           <a
             href="/featured"
             className="block py-2 px-3 text-sm hover:bg-gray-800 rounded transition"

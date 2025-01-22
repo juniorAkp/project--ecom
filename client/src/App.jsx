@@ -28,6 +28,7 @@ import TermsAndConditions from './pages/static/TermsAndConditions.jsx';
 import PrivacyPolicy from './pages/static/PrivacyPolicy.jsx';
 import ContactUs from './pages/static/ContactUs.jsx';
 import AboutUs from './pages/static/AboutUs.jsx';
+import ReviewsPage from './pages/static/ReviewsPage.jsx';
 
 axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_BACKEND_URL
 axios.defaults.withCredentials = true;
@@ -197,6 +198,9 @@ const App = () => {
         } />
         <Route path='/about' element={
             <AboutUs />
+        } />
+        <Route path='/reviews' element={
+            <ReviewsPage />
         } />
 
 
