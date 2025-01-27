@@ -1,7 +1,7 @@
 import { Navigate, Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import Login from './pages/auth/login.jsx';
-import './index.css'
+import './index.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -11,7 +11,7 @@ import CartPage from './pages/CartPage.jsx';
 import { useAuthStore } from './store/AuthStore.jsx';
 import ForgotPasswordPage from './pages/ForgotPassword.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
-import LoadingSpinner from './components/LoadingSpinner.jsx'
+import LoadingSpinner from './components/LoadingSpinner.jsx';
 import AddProduct from './pages/admin/addProduct.jsx';
 import UserEditDetails from './pages/Edit.jsx';
 import OrderPage from './pages/OrderPage.jsx';
@@ -30,9 +30,8 @@ import ContactUs from './pages/static/ContactUs.jsx';
 import AboutUs from './pages/static/AboutUs.jsx';
 import ReviewsPage from './pages/static/ReviewsPage.jsx';
 
-axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_BACKEND_URL
+axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 axios.defaults.withCredentials = true;
-
 
 const App = () => {
   const ProtectedRoute = ({ children }) => {
@@ -42,21 +41,19 @@ const App = () => {
       return <Navigate to='/login' replace />;
     }
     if (!user) {
-      return <Navigate to='/' replace></Navigate>
+      return <Navigate to='/' replace />;
     }
     return children;
   };
 
-  const AdminRoute = ({ children })=>{
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const {user} = useAuthStore()
-    if(!user.isAdmin){
-      return <Navigate to='/' replace></Navigate>
+  const AdminRoute = ({ children }) => {
+    const { user } = useAuthStore();
+    if (!user.isAdmin) {
+      return <Navigate to='/' replace />;
     }
-    return children
-  }
+    return children;
+  };
 
-  // redirect authenticated users to the home page
   const RedirectAuthenticatedUser = ({ children }) => {
     const { isAuthenticated, user } = useAuthStore();
 
@@ -66,145 +63,156 @@ const App = () => {
 
     return children;
   };
+
   const { isCheckingAuth, checkAuth } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  if (isCheckingAuth) return <LoadingSpinner />;
   return (
-
     <>
       <ToastContainer />
       <Routes>
-        {/* Add routes here */}
+        {/* Homepage accessible regardless of auth state */}
+        <Route path="/" element={<Homepage />} />
         
-        <Route path="/" element={
-            <Homepage />
-  
-        } />
-        <Route path="/featured" element={
-            <FeaturedProducts />
-  
-        } />
-        <Route path="/login" element={
-          <RedirectAuthenticatedUser>
-            <Login />
-          </RedirectAuthenticatedUser>
-
-        } />
-        <Route path='/register' element={
-          <RedirectAuthenticatedUser>
-            <Register />
-          </RedirectAuthenticatedUser>
-
-        } />
-        <Route path='/forgot-password' element={
-          <RedirectAuthenticatedUser>
-            <ForgotPasswordPage />
-          </RedirectAuthenticatedUser>
-
-        } />
-        <Route path='/reset-password/:token' element={
-          <RedirectAuthenticatedUser>
-            <ResetPasswordPage />
-          </RedirectAuthenticatedUser>
-
-        } />
-
-        <Route path="/user-edit" element={
-          <ProtectedRoute>
-            <UserEditDetails />
-          </ProtectedRoute>
-
-        } />
-        <Route path="/order-page" element={
-          <ProtectedRoute>
-            <OrderPage />
-          </ProtectedRoute>
-
-        } />
-        <Route path="/admin" element={
-          <AdminRoute>
-            < AdminDashboard />
-          </AdminRoute>
-
-        } />
-        <Route path="/add-product" element={
-          <AdminRoute>
-            < AddProduct />
-          </AdminRoute>
-
-        } />
-        <Route path="/display-product" element={
-          <AdminRoute>
-            < DisplayAllProducts />
-          </AdminRoute>
-
-        } />
-        <Route path="/update-product/:id" element={
-          <AdminRoute>
-            < UpdateProduct />
-          </AdminRoute>
-
-        } />
-        <Route path="/add-category" element={
-          <AdminRoute>
-            < AddCategory />
-          </AdminRoute>
-
-        } />
-        <Route path="/display-categories" element={
-          <AdminRoute>
-            < ManageCategories />
-          </AdminRoute>
-
-        } />
-        <Route path="/update-category/:id" element={
-          <AdminRoute>
-            < UpdateCategory />
-          </AdminRoute>
-
-        } />
-        <Route path="/view-orders" element={
-          <AdminRoute>
-            < ViewOrders />
-          </AdminRoute>
-
-        } />
-        <Route path="/update-order/:id" element={
-          <AdminRoute>
-            < UpdateOrderStatus />
-          </AdminRoute>
-
-        } />
-
-
-        <Route path='/cart-page' element={
-          <ProtectedRoute>
-            <CartPage />
-          </ProtectedRoute>
-
-        } />
-        <Route path='/terms-and-conditions' element={
-            <TermsAndConditions />
-        } />
-        <Route path='/privacy-policy' element={
-            <PrivacyPolicy />
-        } />
-        <Route path='/contact-us' element={
-            <ContactUs />
-        } />
-        <Route path='/about' element={
-            <AboutUs />
-        } />
-        <Route path='/reviews' element={
-            <ReviewsPage />
-        } />
-
-
-        <Route path='*' element={<Navigate to='/' replace />} />
+        {/* Other routes */}
+        <Route path="/featured" element={<FeaturedProducts />} />
+        <Route
+          path="/login"
+          element={
+            <RedirectAuthenticatedUser>
+              <Login />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <RedirectAuthenticatedUser>
+              <Register />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <RedirectAuthenticatedUser>
+              <ForgotPasswordPage />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route
+          path="/reset-password/:token"
+          element={
+            <RedirectAuthenticatedUser>
+              <ResetPasswordPage />
+            </RedirectAuthenticatedUser>
+          }
+        />
+        <Route
+          path="/user-edit"
+          element={
+            <ProtectedRoute>
+              <UserEditDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/order-page"
+          element={
+            <ProtectedRoute>
+              <OrderPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/add-product"
+          element={
+            <AdminRoute>
+              <AddProduct />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/display-product"
+          element={
+            <AdminRoute>
+              <DisplayAllProducts />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/update-product/:id"
+          element={
+            <AdminRoute>
+              <UpdateProduct />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/add-category"
+          element={
+            <AdminRoute>
+              <AddCategory />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/display-categories"
+          element={
+            <AdminRoute>
+              <ManageCategories />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/update-category/:id"
+          element={
+            <AdminRoute>
+              <UpdateCategory />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/view-orders"
+          element={
+            <AdminRoute>
+              <ViewOrders />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/update-order/:id"
+          element={
+            <AdminRoute>
+              <UpdateOrderStatus />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/cart-page"
+          element={
+            <ProtectedRoute>
+              <CartPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/reviews" element={<ReviewsPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );
