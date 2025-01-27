@@ -12,7 +12,7 @@ const OrderPage = () => {
   const { cart, fetchCart } = useCartStore();
 
   const [deliveryLocation, setDeliveryLocation] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState(""); // New phone number state
+  const [phoneNumber, setPhoneNumber] = useState(user?.phone); // New phone number state
   const [locations, setLocations] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState("");
@@ -51,7 +51,7 @@ const OrderPage = () => {
       const orderDetails = {
         userId: user._id,
         deliveryLocation,
-        phoneNumber, // Include phone number in the order details
+        phoneNumber, 
       };
 
       const response = await axios.post("/api/add-order", orderDetails);
@@ -166,7 +166,7 @@ const OrderPage = () => {
                 >
                   <option value="">Select a location</option>
                   {locations.map((location) => (
-                    <option key={location.id} value={location.id}>
+                    <option key={location._id} value={location._id}>
                       {location.name}
                     </option>
                   ))}
