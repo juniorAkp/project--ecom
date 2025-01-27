@@ -17,7 +17,7 @@ const getOrder = async (req, res) => {
 }
 const addOrder = async (req, res) => {
     try {
-        const { userId, deliveryLocation } = req.body;
+        const { userId, deliveryLocation,phone } = req.body;
 
         // Check if delivery location is provided
         if (!deliveryLocation) {
@@ -47,6 +47,7 @@ const addOrder = async (req, res) => {
             user: userId,
             orderItems,
             deliveryLocation,
+            phone,
             totalPrice,
         });
 

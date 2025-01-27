@@ -12,6 +12,7 @@ const OrderPage = () => {
   const { cart, fetchCart } = useCartStore();
 
   const [deliveryLocation, setDeliveryLocation] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(""); // New phone number state
   const [locations, setLocations] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState("");
@@ -32,15 +33,13 @@ const OrderPage = () => {
     return cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   };
 
-  const handlePlaceOrder = async (deliveryLocation) => {
-    // Check if delivery location is selected
-    if (!deliveryLocation) {
-      setError("Please select a delivery location.");
+  const handlePlaceOrder = async () => {
+    if (!deliveryLocation || !phoneNumber) {
+      setError("Please provide both delivery location and phone number.");
       return;
     }
 
     try {
-      // Calculate total amount (in kobo, Paystack uses kobo)
       const totalAmount = calculateTotal();
       if (totalAmount === 0) {
         alert("Your cart is empty.");
@@ -52,14 +51,13 @@ const OrderPage = () => {
       const orderDetails = {
         userId: user._id,
         deliveryLocation,
+        phoneNumber, // Include phone number in the order details
       };
 
       const response = await axios.post("/api/add-order", orderDetails);
       if (response.data.success) {
         setSuccess("Your order has been placed successfully!");
-        // Initialize Paystack payment once the order is created
         payWithPaystack(user.email, totalAmountInKobo, response.data.order._id);
-        await updateOrderStatusToPaid(response.data.order._id);
       } else {
         setError(response.data.message || "An error occurred while placing the order.");
       }
@@ -72,16 +70,12 @@ const OrderPage = () => {
   // Initialize Paystack payment
   const payWithPaystack = (email, amount) => {
     const handler = PaystackPop.setup({
-      key: import.meta.env.VITE_REACT_APP_PAYSTACK_SECRET, // Use your actual Paystack public key
+      key: import.meta.env.VITE_REACT_APP_PAYSTACK_SECRET,
       email: email,
-      amount: amount, // Amount in kobo (N100 = 10000)
+      amount: amount,
       onSuccess(transaction) {
-        const message = `Transaction complete! Reference: ${transaction.reference}`;
-        setSuccess(message);
-        navigate('/')
-      },
-      oncancel:() => {
-        setError("payment cancelled")
+        setSuccess(`Transaction complete! Reference: ${transaction.reference}`);
+        navigate('/');
       },
       onClose: () => {
         setError("Payment process was closed by the user.");
@@ -91,54 +85,12 @@ const OrderPage = () => {
     handler.openIframe();
   };
 
-  // Update order status to paid
-  const updateOrderStatusToPaid = async (orderId) => {
-    try {
-      const response = await axios.put(`/api/update-orders/${orderId}/pay`);
-
-      if (response.data.success) {
-        setSuccess("Order has been paid and placed successfully")
-        navigate('/');
-      } else {
-        setError("Failed to update the order status.");
-      }
-    } catch (error) {
-      console.error("Error updating order status:", error);
-      setError("An error occurred while updating the order status.");
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsProcessing(true);
-
-    if (!deliveryLocation) {
-      setError("Please select a delivery location.");
-      return;
-    }
-
-    try {
-      const totalAmount = calculateTotal();
-      if (totalAmount === 0) {
-        alert("Your cart is empty.");
-        return;
-      }
-
-      await handlePlaceOrder(deliveryLocation);
-    } catch (error) {
-      setError(error.message || "An error occurred. Please try again later.");
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
   useEffect(() => {
     if (user) {
       fetchCart(user._id);
     }
-    fetchDeliveryLocations(); // Fetch locations on component mount
+    fetchDeliveryLocations();
 
-    // Load Paystack script dynamically
     const script = document.createElement("script");
     script.src = "https://js.paystack.co/v1/inline.js";
     script.async = true;
@@ -149,12 +101,24 @@ const OrderPage = () => {
     };
   }, [user, fetchCart]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsProcessing(true);
+
+    try {
+      await handlePlaceOrder();
+    } catch (error) {
+      setError(error.message || "An error occurred. Please try again later.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   return (
     <>
       <Header />
       <div className="bg-gradient-to-r from-indigo-100 via-purple-50 to-indigo-100 min-h-screen pt-16 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Order Details */}
           <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-xl">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Order Details</h2>
             {cart.length > 0 ? (
@@ -185,20 +149,17 @@ const OrderPage = () => {
             )}
           </div>
 
-          {/* Right Column - Shipping Form */}
           <div className="bg-white p-6 rounded-xl shadow-xl">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Delivery Information</h2>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             {success && <p className="text-green-500 mb-4">{success}</p>}
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Delivery Location Select */}
               <div>
                 <label htmlFor="deliveryLocation" className="block text-lg font-medium text-gray-700">
                   Delivery Location
                 </label>
                 <select
                   id="deliveryLocation"
-                  name="deliveryLocation"
                   value={deliveryLocation}
                   onChange={(e) => setDeliveryLocation(e.target.value)}
                   className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -210,6 +171,20 @@ const OrderPage = () => {
                     </option>
                   ))}
                 </select>
+              </div>
+
+              <div>
+                <label htmlFor="phoneNumber" className="block text-lg font-medium text-gray-700">
+                  Phone Number
+                </label>
+                <input
+                  id="phoneNumber"
+                  type="text"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  placeholder="Enter your phone number"
+                />
               </div>
 
               <div className="mt-8">
