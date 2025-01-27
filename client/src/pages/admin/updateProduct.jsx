@@ -18,6 +18,8 @@ const UpdateProduct = () => {
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
   const [product, setProduct] = useState(null);  // State to hold the fetched product data
+  const [loading, setLoading] = useState(false);  // State for loading
+  const [successMessage, setSuccessMessage] = useState(''); // Success message state
 
   useEffect(() => {
     // Fetch categories from the backend
@@ -58,9 +60,9 @@ const UpdateProduct = () => {
     setImage(e.target.files[0]);
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true when submitting
 
     const formData = new FormData();
     formData.append('name', name);
@@ -80,13 +82,15 @@ const UpdateProduct = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
+      setLoading(false); // Set loading to false after the request
       if (data.success) {
-        alert('Product updated successfully');
-        navigate('/admin')
+        setSuccessMessage('Product updated successfully');
+        setTimeout(() => navigate('/admin'), 2000); // Redirect after success message
       } else {
         setError(data.error);
       }
     } catch (err) {
+      setLoading(false); // Set loading to false if there's an error
       setError('Error updating product');
     }
   };
@@ -94,6 +98,11 @@ const UpdateProduct = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-3xl font-bold mb-6">Update Product</h1>
+      
+      {/* Display success message */}
+      {successMessage && <div className="text-green-500 mb-4">{successMessage}</div>}
+      
+      {/* Display error message */}
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
       {product ? (
@@ -109,7 +118,6 @@ const UpdateProduct = () => {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 required
               />
-
             </div>
             <div>
               <label htmlFor="price" className="block text-sm font-medium">Price</label>
@@ -121,7 +129,6 @@ const UpdateProduct = () => {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 required
               />
-
             </div>
             <div className="col-span-2">
               <label htmlFor="description" className="block text-sm font-medium">Description</label>
@@ -166,7 +173,6 @@ const UpdateProduct = () => {
                 onChange={(e) => setIsFeatured(e.target.checked)}
                 className="mt-1"
               />
-
             </div>
             <div>
               <label htmlFor="countInStock" className="block text-sm font-medium">Count In Stock</label>
@@ -178,7 +184,6 @@ const UpdateProduct = () => {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 required
               />
-
             </div>
             <div>
               <label htmlFor="rating" className="block text-sm font-medium">Rating</label>
@@ -189,7 +194,6 @@ const UpdateProduct = () => {
                 onChange={(e) => setRating(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
-
             </div>
             <div>
               <label htmlFor="reviews" className="block text-sm font-medium">Reviews</label>
@@ -200,7 +204,6 @@ const UpdateProduct = () => {
                 onChange={(e) => setReviews(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
-
             </div>
             <div className="col-span-2">
               <label htmlFor="image" className="block text-sm font-medium">Product Image</label>
@@ -210,15 +213,15 @@ const UpdateProduct = () => {
                 onChange={handleImageChange}
                 className="mt-1 block w-full"
               />
-
             </div>
           </div>
 
           <button
             type="submit"
             className="mt-4 w-full px-6 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 focus:outline-none"
+            disabled={loading} // Disable button while loading
           >
-            Update Product
+            {loading ? 'Updating Product...' : 'Update Product'}
           </button>
         </form>
       ) : (
