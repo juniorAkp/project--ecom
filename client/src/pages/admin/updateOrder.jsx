@@ -6,7 +6,7 @@ const UpdateOrderStatus = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // Get order ID from route params
   const [order, setOrder] = useState(null);
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('Delivered'); // Default status to "Delivered"
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [successMessage, setSuccessMessage] = useState('');
@@ -16,7 +16,7 @@ const UpdateOrderStatus = () => {
       try {
         const { data } = await axios.get(`/admin/get-order/${id}`);
         setOrder(data.order);
-        setStatus(data.order.status);
+        setStatus('Delivered'); // Ensure the status is set to "Delivered" regardless of the fetched order status
       } catch (err) {
         setError('Failed to fetch order details');
       } finally {
@@ -32,7 +32,7 @@ const UpdateOrderStatus = () => {
       const { data } = await axios.put(`/admin/edit-status/${id}`, { status });
       if (data.success) {
         setSuccessMessage('Order status updated successfully');
-        navigate('/admin')
+        navigate('/admin');
       }
     } catch (err) {
       setError('Failed to update order status');
@@ -66,7 +66,7 @@ const UpdateOrderStatus = () => {
           onChange={(e) => setStatus(e.target.value)}
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         >
-          <option value="Delivered">Delivered</option>
+          <option value="Delivered">Delivered</option> {/* Only "Delivered" is shown */}
         </select>
         <button
           type="submit"
