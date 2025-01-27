@@ -8,6 +8,7 @@ const AddCategory = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null); // State for success message
   const [loading, setLoading] = useState(false); // State for loading spinner
 
   const handleSubmit = async (e) => {
@@ -23,15 +24,18 @@ const AddCategory = () => {
     try {
       const { data } = await axios.post('/admin/add-category', categoryData);
       if (data.success) {
-        alert('Category created successfully');
-        // Reset the form after successful submission
-        setName('');
-        navigate('/')
+        setSuccessMessage('Category created successfully'); // Set success message
+        setError(null); // Clear any previous error
+        setName(''); // Reset the form
+        // Optionally navigate to another page after a delay
+        setTimeout(() => navigate('/admin'), 2000); 
       } else {
         setError(data.error);
+        setSuccessMessage(null); // Clear any previous success message
       }
     } catch (err) {
       setError('Error creating category');
+      setSuccessMessage(null); // Clear any previous success message
     } finally {
       setLoading(false); // Stop loading spinner
     }
@@ -44,6 +48,9 @@ const AddCategory = () => {
         <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
           <h1 className="text-3xl font-bold mb-6">Add Category</h1>
           {error && <div className="text-red-500 mb-4">{error}</div>}
+          {successMessage && (
+            <div className="text-green-500 mb-4">{successMessage}</div>
+          )}
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4">
               <div>

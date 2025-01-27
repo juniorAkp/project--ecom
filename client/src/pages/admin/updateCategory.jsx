@@ -8,7 +8,8 @@ const UpdateCategory = () => {
 
   const [name, setName] = useState('');
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false); // State for loading spinner
+  const [successMessage, setSuccessMessage] = useState(null); // State for success message
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Fetch category data when the component mounts
@@ -34,13 +35,17 @@ const UpdateCategory = () => {
     try {
       const { data } = await axios.put(`/admin/category/${id}`, { name });
       if (data.success) {
-        alert('Category updated successfully');
-        navigate('/admin');
+        setSuccessMessage('Category updated successfully'); // Set success message
+        setError(null); // Clear previous error
+        // Optionally navigate after a delay
+        setTimeout(() => navigate('/admin'), 2000);
       } else {
         setError(data.error);
+        setSuccessMessage(null); // Clear success message if there's an error
       }
     } catch (err) {
       setError('Error updating category');
+      setSuccessMessage(null); // Clear success message if there's an error
     } finally {
       setLoading(false); // Stop loading spinner
     }
@@ -50,6 +55,9 @@ const UpdateCategory = () => {
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-3xl font-bold mb-6">Update Category</h1>
       {error && <div className="text-red-500 mb-4">{error}</div>}
+      {successMessage && (
+        <div className="text-green-500 mb-4">{successMessage}</div>
+      )}
 
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-4">

@@ -10,6 +10,7 @@ const AddLocation = () => {
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null); // State for success message
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -27,18 +28,22 @@ const AddLocation = () => {
     try {
       const { data } = await axios.post('/admin/create-location', locationData);
       if (data.success) {
-        alert('Location created successfully');
+        setSuccessMessage('Location created successfully'); // Set success message
+        setError(null); // Clear previous error
         setName('');
         setCity('');
         setCountry('');
-        navigate('/');
+        // Optionally navigate after delay
+        setTimeout(() => navigate('/admin'), 2000); 
       } else {
         setError(data.error);
+        setSuccessMessage(null); // Clear success message if there's an error
       }
     } catch (err) {
       setError('Error creating location');
+      setSuccessMessage(null); // Clear success message if there's an error
     } finally {
-      setLoading(false); // Stop loading spinner
+      setLoading(false); 
     }
   };
 
@@ -49,6 +54,9 @@ const AddLocation = () => {
         <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
           <h1 className="text-3xl font-bold mb-6">Add Location</h1>
           {error && <div className="text-red-500 mb-4">{error}</div>}
+          {successMessage && (
+            <div className="text-green-500 mb-4">{successMessage}</div>
+          )}
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4">
               <div>

@@ -19,6 +19,21 @@ const createLocation = async(req,res)=>{
   }
 }
 
+const getLocation = async(req,res)=>{
+  const {id}= req.params;
+  try {
+    if(!mongoose.isValidObjectId(id) || ! id){
+      return res.status(400).json({message: "invalid or no id provided", success: false})
+    }
+    const location = await Location.findById(id);
+    if(!location){
+      return res.status(200).json({message: "no location found", success: true, data:[]})
+    }
+    return res.status(200).json({message: "location found", success: true, location})
+  } catch (error) {
+    return res.status(500).json({message: error.message, success: false})
+  }
+}
 const updateLocation = async(req,res)=>{
   const {name,city,country} = req.body;
   const {id} = req.params;
@@ -52,5 +67,6 @@ const deleteLocation = async(req,res)=>{
 module.exports = {
   createLocation,
   updateLocation,
-  deleteLocation
+  deleteLocation,
+  getLocation
 }

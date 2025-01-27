@@ -10,16 +10,18 @@ const UpdateLocation = () => {
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null); // State for success message
   const [loading, setLoading] = useState(false); // State for loading spinner
 
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const { data } = await axios.get(`/api/get-location/${id}`);
+        const { data } = await axios.get(`/admin/get-location/${id}`);
         if (data.success) {
           setName(data.location.name);
           setCity(data.location.city);
           setCountry(data.location.country);
+          setError(null); // Clear any previous error
         } else {
           setError('Location not found');
         }
@@ -33,14 +35,16 @@ const UpdateLocation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true); // Start loading spinner
+    setError(null); // Clear error before starting submission
+    setSuccessMessage(null); // Clear previous success message
 
     try {
       const { data } = await axios.put(`/admin/edit-locations/${id}`, { name, city, country });
       if (data.success) {
-        alert('Location updated successfully');
-        navigate('/admin');
+        setSuccessMessage('Location updated successfully'); // Set success message
+        setTimeout(() => navigate('/admin'), 2000); // Optionally navigate after a short delay
       } else {
-        setError(data.error);
+        setError(data.error || 'Failed to update location');
       }
     } catch (err) {
       setError('Error updating location');
@@ -53,11 +57,16 @@ const UpdateLocation = () => {
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-3xl font-bold mb-6">Update Location</h1>
       {error && <div className="text-red-500 mb-4">{error}</div>}
+      {successMessage && (
+        <div className="text-green-500 mb-4">{successMessage}</div>
+      )}
 
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium">Location Name</label>
+            <label htmlFor="name" className="block text-sm font-medium">
+              Location Name
+            </label>
             <input
               type="text"
               id="name"
@@ -69,7 +78,9 @@ const UpdateLocation = () => {
           </div>
 
           <div>
-            <label htmlFor="city" className="block text-sm font-medium">City</label>
+            <label htmlFor="city" className="block text-sm font-medium">
+              City
+            </label>
             <input
               type="text"
               id="city"
@@ -81,7 +92,9 @@ const UpdateLocation = () => {
           </div>
 
           <div>
-            <label htmlFor="country" className="block text-sm font-medium">Country</label>
+            <label htmlFor="country" className="block text-sm font-medium">
+              Country
+            </label>
             <input
               type="text"
               id="country"
