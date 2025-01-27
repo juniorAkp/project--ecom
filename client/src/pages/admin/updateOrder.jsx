@@ -48,13 +48,14 @@ const UpdateOrderStatus = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md mt-16">
       <h1 className="text-3xl font-bold mb-6">Update Order Status</h1>
       {successMessage && <div className="text-green-500 mb-4">{successMessage}</div>}
       <div className="mb-6">
         <h2 className="text-xl font-semibold">Order Details</h2>
         <p>Order ID: {order.id}</p>
         <p>Total Price: ${order.totalPrice.toFixed(2)}</p>
+        <p>Location: {order.location.name}</p>
         <p>Status: {order.status}</p>
       </div>
       <form onSubmit={handleStatusUpdate}>

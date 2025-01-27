@@ -27,7 +27,7 @@ const addOrder = async (req, res) => {
         // Find the cart for the user and populate the product details
         const cart = await Cart.findOne({ user: userId }).populate('items.product');
         if (!cart || cart.items.length === 0) {
-            return res.status(400).json({ message: 'Cart is empty.', success: false });
+            return res.status(200).json({ message: 'Cart is empty.', success: true, data:[] });
         }
 
         // Map cart items to order items structure

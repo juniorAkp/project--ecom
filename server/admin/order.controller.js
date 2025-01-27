@@ -17,7 +17,7 @@ const editOrder = async(req,res)=>{
 
 const getOrders = async(req,res)=>{
   try {
-    const orders = await Order.find().sort({dateOrdered: -1}).populate('user','name')
+    const orders = await Order.find().sort({dateOrdered: -1}).populate('user','name').populate('location','name')
     if(!orders) return res.status(400).json({error: "no orders found",success: false})
     return res.status(200).json({ orders, success: true})
 }catch (e){
