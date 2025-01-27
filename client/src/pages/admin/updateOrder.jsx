@@ -55,7 +55,7 @@ const UpdateOrderStatus = () => {
         <h2 className="text-xl font-semibold">Order Details</h2>
         <p>Order ID: {order.id}</p>
         <p>Total Price: ${order.totalPrice.toFixed(2)}</p>
-        <p>Location: {order.location.name}</p>
+        <p>Location: {order.deliveryLocation.name}</p>
         <p>Status: {order.status}</p>
       </div>
       <form onSubmit={handleStatusUpdate}>
