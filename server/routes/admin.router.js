@@ -12,7 +12,7 @@ const { createLocation, updateLocation, deleteLocation, getLocation } = require(
 
 
 //location routes
-router.post('/get-location/:id',getLocation)
+router.get('/get-location/:id',getLocation)
 router.post('/create-location',createLocation);
 router.put('/edit-locations/:id',updateLocation);
 router.delete('/delete-location/:id',deleteLocation)
