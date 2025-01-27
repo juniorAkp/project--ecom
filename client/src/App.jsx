@@ -29,6 +29,7 @@ import PrivacyPolicy from './pages/static/PrivacyPolicy.jsx';
 import ContactUs from './pages/static/ContactUs.jsx';
 import AboutUs from './pages/static/AboutUs.jsx';
 import ReviewsPage from './pages/static/ReviewsPage.jsx';
+import ProductDetails from './pages/ProductDetails.jsx';
 
 axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_BACKEND_URL
 axios.defaults.withCredentials = true;
@@ -47,10 +48,10 @@ const App = () => {
     return children;
   };
 
-  const AdminRoute = ({ children })=>{
+  const AdminRoute = ({ children }) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const {user} = useAuthStore()
-    if(!user.isAdmin){
+    const { user } = useAuthStore()
+    if (!user.isAdmin) {
       return <Navigate to='/' replace></Navigate>
     }
     return children
@@ -79,14 +80,14 @@ const App = () => {
       <ToastContainer />
       <Routes>
         {/* Add routes here */}
-        
+
         <Route path="/" element={
-            <Homepage />
-  
+          <Homepage />
+
         } />
         <Route path="/featured" element={
-            <FeaturedProducts />
-  
+          <FeaturedProducts />
+
         } />
         <Route path="/login" element={
           <RedirectAuthenticatedUser>
@@ -179,7 +180,7 @@ const App = () => {
           </AdminRoute>
 
         } />
-
+        <Route path="/product/:id" element={<ProductDetails />} />
 
         <Route path='/cart-page' element={
           <ProtectedRoute>
@@ -188,19 +189,19 @@ const App = () => {
 
         } />
         <Route path='/terms-and-conditions' element={
-            <TermsAndConditions />
+          <TermsAndConditions />
         } />
         <Route path='/privacy-policy' element={
-            <PrivacyPolicy />
+          <PrivacyPolicy />
         } />
         <Route path='/contact-us' element={
-            <ContactUs />
+          <ContactUs />
         } />
         <Route path='/about' element={
-            <AboutUs />
+          <AboutUs />
         } />
         <Route path='/reviews' element={
-            <ReviewsPage />
+          <ReviewsPage />
         } />
 
 
