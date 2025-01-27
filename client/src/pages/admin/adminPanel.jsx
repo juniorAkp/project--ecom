@@ -8,14 +8,17 @@ const AdminDashboard = () => {
   const [totalSales, setTotalSales] = useState(null);
   const [userCount, setUserCount] = useState(null);
   const [productCount, setProductCount] = useState(null); // New state for product count
+  const [locationCount, setLocationCount] = useState(null); // New state for location count
   const [loadingSales, setLoadingSales] = useState(false);
   const [loadingUserCount, setLoadingUserCount] = useState(false);
   const [loadingProductCount, setLoadingProductCount] = useState(false); // Loading state for product count
+  const [loadingLocationCount, setLoadingLocationCount] = useState(false); // Loading state for location count
   const [error, setError] = useState(null);
 
   const [isSalesOpen, setIsSalesOpen] = useState(false);
   const [isUserCountOpen, setIsUserCountOpen] = useState(false);
   const [isProductCountOpen, setIsProductCountOpen] = useState(false); // State for toggling product count
+  const [isLocationCountOpen, setIsLocationCountOpen] = useState(false); // State for toggling location count
 
   // Fetch total sales data
   const fetchTotalSales = async () => {
@@ -56,6 +59,19 @@ const AdminDashboard = () => {
     }
   };
 
+  // Fetch location count data
+  const fetchLocationCount = async () => {
+    setLoadingLocationCount(true);
+    try {
+      const { data } = await axios.get('/admin/count-locations');
+      setLocationCount(data.locations);
+    } catch (err) {
+      setError('Failed to fetch location count');
+    } finally {
+      setLoadingLocationCount(false);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -86,7 +102,24 @@ const AdminDashboard = () => {
                   </Link>
                 </div>
               </div>
-
+              {/* location Management*/}
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                <h3 className="text-xl font-semibold text-gray-700">Locations</h3>
+                <div className="mt-4 space-y-4">
+                  <Link
+                    to="/add-location"
+                    className="block text-center text-white bg-green-600 hover:bg-green-700 py-3 rounded-md transition duration-300"
+                  >
+                    Add Location
+                  </Link>
+                  <Link
+                    to="/display-locations"
+                    className="block text-center text-white bg-blue-600 hover:bg-blue-700 py-3 rounded-md transition duration-300"
+                  >
+                    Display Locations
+                  </Link>
+                </div>
+              </div>
               {/* Products Management */}
               <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                 <h3 className="text-xl font-semibold text-gray-700">Products</h3>
@@ -208,6 +241,7 @@ const AdminDashboard = () => {
                   )}
                 </div>
               </div>
+
             </div>
           </div>
         </div>

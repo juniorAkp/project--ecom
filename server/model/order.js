@@ -1,5 +1,6 @@
-const mongoose = require('mongoose')
-const {Schema} = require('mongoose')
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
 const orderSchema = new Schema({
     orderItems: [
         {
@@ -7,11 +8,11 @@ const orderSchema = new Schema({
             quantity: { type: Number, required: true },
         },
     ],
-    shippingAddress1: { type: String, required: true },
-    shippingAddress2: { type: String },
-    city: { type: String, required: true },
-    zip: { type: String, required: true },
-    country: { type: String, required: true },
+    deliveryLocation: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Location', 
+        required: true
+    },
     phone: { type: String, required: true },
     status: {
         type: String,
@@ -22,7 +23,7 @@ const orderSchema = new Schema({
     totalPrice: { type: Number, required: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     dateOrdered: { type: Date, default: Date.now },
-    paymentReference: { type: String},
+    paymentReference: { type: String },
 });
 
 orderSchema.virtual('id').get(function () {

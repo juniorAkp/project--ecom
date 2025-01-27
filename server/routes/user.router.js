@@ -13,7 +13,12 @@ const { addToCart, updateCart, deleteCart, getUserCart } = require('../controlle
 
 const verify = require('../middlewares/verify')
 const {category,getCategory} = require("../controllers/category.controller");
+const { getLocations, getLocation } = require('../controllers/location.controller');
 
+
+//locations routes
+router.get('/get-locations',getLocations)
+router.get('/get-location/:id',getLocation)
 
 // product routes
 router.get('/products/:id',getProduct)

@@ -30,6 +30,9 @@ import ContactUs from './pages/static/ContactUs.jsx';
 import AboutUs from './pages/static/AboutUs.jsx';
 import ReviewsPage from './pages/static/ReviewsPage.jsx';
 import ProductDetails from './pages/ProductDetails.jsx';
+import AddLocation from './pages/admin/createlocation.jsx';
+import UpdateLocation from './pages/admin/UpdateLocation.jsx';
+import ManageLocations from './pages/admin/displayLocations.jsx';
 
 axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_BACKEND_URL
 axios.defaults.withCredentials = true;
@@ -162,9 +165,27 @@ const App = () => {
           </AdminRoute>
 
         } />
+
         <Route path="/update-category/:id" element={
           <AdminRoute>
             < UpdateCategory />
+          </AdminRoute>
+        } />
+
+        <Route path="/add-location" element={
+          <AdminRoute>
+            < AddLocation />
+          </AdminRoute>
+        } />
+        <Route path="/display-locations" element={
+          <AdminRoute>
+            < ManageLocations />
+          </AdminRoute>
+
+        } />
+        <Route path="/update-location/:id" element={
+          <AdminRoute>
+            < UpdateLocation />
           </AdminRoute>
 
         } />

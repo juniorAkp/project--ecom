@@ -8,6 +8,13 @@ const { createProducts, updateProduct, deleteProduct, getProductCount, upload, g
 const { updateCategory, deleteCategory, addCategory, getCategories, countCategories, getCategory } = require('../admin/admin.category.controller');
 
 const { editOrder, getOrders, getOrdersCount, getOrder, deleteOrder, getTotalSales } = require('../admin/order.controller');
+const { createLocation, updateLocation, deleteLocation } = require('../admin/location.controller');
+
+
+//location routes
+router.post('/create-location',createLocation);
+router.put('/edit-locations/:id',updateLocation);
+router.delete('/delete-location/:id',deleteLocation)
 
 //user routes
 router.get('/count-users',countUsers)

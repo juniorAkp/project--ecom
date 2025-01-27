@@ -13,6 +13,4 @@ const allowedOrigins = [
     'https://project-ecom-x7fx.onrender.com',
     'https://project-ecom-1.onrender.com'
 ];
-console.log(allowedOrigins)
-
 module.exports = allowedOrigins;
