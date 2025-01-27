@@ -31,11 +31,10 @@ const ViewOrders = () => {
       const { data } = await axios.put(`/admin/edit-status/${orderId}`, { status: newStatus });
       if (data.success) {
         alert(`Order status updated to ${newStatus}`);
-        window.location.reload();
         // Refetch orders
         const updatedOrders = await axios.get('/admin/get-all-orders');
         setOrders(updatedOrders.data.orders);
-        navigate('/admin')
+        navigate('/admin');
         // Update the order status in the state
         setOrders((prevOrders) =>
           prevOrders.map((order) =>
@@ -53,12 +52,12 @@ const ViewOrders = () => {
   return (
     <>
       <Header />
-      <div className="max-w-6xl mx-auto p-4 md:p-6 bg-white rounded-lg shadow-md mt16">
-        <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-center md:text-left">
+      <div className="max-w-6xl mx-auto p-4 md:p-6 bg-white rounded-lg shadow-md mt-16">
+        <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-center">
           Manage Orders
         </h1>
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-        {success && <div className="text-green-500 mb-4">{success}</div>}
+        {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
+        {success && <div className="text-green-500 mb-4 text-center">{success}</div>}
         {orders.length === 0 ? (
           <div className="text-center text-gray-500">No orders available.</div>
         ) : (
@@ -70,9 +69,7 @@ const ViewOrders = () => {
                   <th className="px-2 py-1 md:px-4 md:py-2 text-left border border-gray-300">User</th>
                   <th className="px-2 py-1 md:px-4 md:py-2 text-left border border-gray-300">Location</th>
                   <th className="px-2 py-1 md:px-4 md:py-2 text-left border border-gray-300">Phone</th>
-                  <th className="px-2 py-1 md:px-4 md:py-2 text-left border border-gray-300">
-                    Total Price
-                  </th>
+                  <th className="px-2 py-1 md:px-4 md:py-2 text-left border border-gray-300">Total Price</th>
                   <th className="px-2 py-1 md:px-4 md:py-2 text-left border border-gray-300">Status</th>
                   <th className="px-2 py-1 md:px-4 md:py-2 text-left border border-gray-300">Actions</th>
                 </tr>
@@ -101,8 +98,8 @@ const ViewOrders = () => {
           </div>
         )}
       </div>
+      <Footer />
     </>
-
   );
 };
 
