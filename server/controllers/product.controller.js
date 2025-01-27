@@ -11,15 +11,25 @@ const getProduct = async(req,res)=>{
     return res.status(200).json({product: product, success: true})
 }
 
-const products = async(req,res)=>{
+
+// In your products controller
+const products = async (req, res) => {
+  const { searchQuery } = req.query;
+
   try {
-    const products = await Product.find().populate('category','name');
-    if(!products) return res.status(200).json({message:"no products",success: true,data:[]})
-    return res.status(200).json({products: products,success: true})
-}catch (e) {
-    return res.status(500).json({message: e.message, success: false})
-}
-}
+    let query = {};
+    if (searchQuery) {
+      query.name = { $regex: searchQuery, $options: 'i' }; // Case-insensitive search
+    }
+
+    const products = await Product.find(query).populate('category','name');
+    res.json({ success: true, products });
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
 
 const featuredProducts = async (req,res)=>{
   try {

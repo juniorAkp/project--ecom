@@ -1,19 +1,21 @@
 import { useEffect, useState } from 'react';
-import { FaCartPlus } from 'react-icons/fa';
 import Header from '../components/Header';
 import axios from 'axios';
 import { useAuthStore } from '../store/AuthStore';
-import { useCartStore } from '../store/CartStore';
 import Footer from '../components/Footer';
+import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import BannerSection from '../components/BannerSection';
+import WelcomeSection from '../components/CategoriesSection';
+import ContactSection from '../components/ContactSection';
 
 const Homepage = () => {
   const { user } = useAuthStore();
-  const { addItem } = useCartStore();
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Static banners
   const staticBanners = [
@@ -22,7 +24,7 @@ const Homepage = () => {
       type: 'banner',
       title: 'Get 50% Off Products!',
       description: 'Hurry! Limited Time Offer on Select Items.',
-      image: '/images/image1.avif', // Replace with actual banner image URL
+      image: '/images/image1.avif',
     },
     {
       id: 'banner2',
@@ -40,9 +42,20 @@ const Homepage = () => {
     },
   ];
 
+  const getCategories = async () => {
+    try {
+      const { data } = await axios.get('/api/categories');
+      setCategories(data.category);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
   const getProducts = async () => {
     try {
-      const { data } = await axios.get('/api/products');
+      const { data } = await axios.get('/api/products', {
+        params: { searchQuery },
+      });
       if (data.success) setProducts(data.products);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -50,8 +63,9 @@ const Homepage = () => {
   };
 
   useEffect(() => {
+    getCategories();
     getProducts();
-  }, [user]);
+  }, [user, searchQuery]);
 
   const sliderSettings = {
     dots: true,
@@ -63,57 +77,38 @@ const Homepage = () => {
     autoplaySpeed: 3000,
   };
 
-  const handleAddToCart = async (productId) => {
-    setLoading(true);
-    try {
-      await addItem(user._id, productId);
-    } catch (error) {
-      console.error('Error adding item to cart:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const sliderContent = [...staticBanners]; 
-
   return (
     <>
       <Header setProducts={setProducts} />
-      <main className="bg-gray-50 min-h-screen pt-16">
-        {/* Image Slider Section */}
-        <div className="bg-white py-6 px-4">
-          <Slider {...sliderSettings}>
-            {sliderContent.map((item) =>
-              item.type === 'banner' ? (
-                // Render static banners
-                <div key={item.id} className="relative">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-96 object-cover rounded-lg"
+      <main className="bg-gray-50 min-h-screen pt-16 pb-8">
+        {/* Banner, Categories, and Contact in a Flex Layout */}
+        {!searchQuery && (
+          <div className="flex flex-col md:flex-row items-start justify-between gap-8 px-4 pt-16">
+            {/* Left Column - Categories */}
+            <div className="w-full md:w-1/4">
+              <WelcomeSection />
+            </div>
+
+            {/* Center Column - Banner */}
+            <div className="w-full md:w-2/4">
+              <Slider {...sliderSettings}>
+                {staticBanners.map((item) => (
+                  <BannerSection
+                    key={item.id}
+                    image={item.image}
+                    title={item.title}
+                    description={item.description}
                   />
-                  <div className="absolute inset-0 flex flex-col justify-end bg-black bg-opacity-40 p-4">
-                    <h3 className="text-2xl font-bold text-white">{item.title}</h3>
-                    <p className="text-lg text-white">{item.description}</p>
-                  </div>
-                </div>
-              ) : (
-                // Render product images
-                <div key={item._id} className="relative">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-96 object-cover rounded-lg"
-                  />
-                  <div className="absolute inset-0 flex flex-col justify-end bg-black bg-opacity-40 p-4">
-                    <h3 className="text-lg font-semibold text-white">{item.name}</h3>
-                    <p className="text-base font-medium text-white">GH¢ {item.price}</p>
-                  </div>
-                </div>
-              )
-            )}
-          </Slider>
-        </div>
+                ))}
+              </Slider>
+            </div>
+
+            {/* Right Column - Contact */}
+            <div className="w-full md:w-1/4">
+              <ContactSection />
+            </div>
+          </div>
+        )}
 
         {/* Product Section */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -122,30 +117,18 @@ const Homepage = () => {
             {products.map((product) => (
               <div
                 key={product._id}
-                className="bg-white rounded-lg shadow-md overflow-hidden relative group"
+                className="bg-white rounded-lg shadow-lg overflow-hidden relative group hover:shadow-xl transition-all duration-300"
               >
-                {/* Image Section */}
-                <div className="relative">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-48 object-cover transition group-hover:blur-md"
-                  />
-                  <button
-                    onClick={() => handleAddToCart(product._id)}
-                    className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <span className="text-white text-xl">Adding...</span>
-                    ) : (
-                      <FaCartPlus className="text-white text-2xl" />
-                    )}
-                  </button>
-                </div>
-
-                {/* Product Info */}
-                <div className="p-4">
+                <Link to={`/product/${product._id}`}>
+                  <div className="relative">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-48 object-cover rounded-t-lg transition-transform duration-300 ease-in-out transform hover:scale-105"
+                    />
+                  </div>
+                </Link>
+                <div className="p-4 flex flex-col gap-2">
                   <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
                   <p className="text-base font-medium text-gray-700">GH¢ {product.price}</p>
                 </div>

@@ -58,6 +58,7 @@ const UpdateProduct = () => {
     setImage(e.target.files[0]);
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -108,6 +109,7 @@ const UpdateProduct = () => {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 required
               />
+
             </div>
             <div>
               <label htmlFor="price" className="block text-sm font-medium">Price</label>
@@ -119,6 +121,7 @@ const UpdateProduct = () => {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 required
               />
+
             </div>
             <div className="col-span-2">
               <label htmlFor="description" className="block text-sm font-medium">Description</label>
@@ -163,6 +166,7 @@ const UpdateProduct = () => {
                 onChange={(e) => setIsFeatured(e.target.checked)}
                 className="mt-1"
               />
+
             </div>
             <div>
               <label htmlFor="countInStock" className="block text-sm font-medium">Count In Stock</label>
@@ -174,6 +178,7 @@ const UpdateProduct = () => {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 required
               />
+
             </div>
             <div>
               <label htmlFor="rating" className="block text-sm font-medium">Rating</label>
@@ -184,6 +189,7 @@ const UpdateProduct = () => {
                 onChange={(e) => setRating(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
+
             </div>
             <div>
               <label htmlFor="reviews" className="block text-sm font-medium">Reviews</label>
@@ -194,6 +200,7 @@ const UpdateProduct = () => {
                 onChange={(e) => setReviews(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
+
             </div>
             <div className="col-span-2">
               <label htmlFor="image" className="block text-sm font-medium">Product Image</label>
@@ -203,6 +210,7 @@ const UpdateProduct = () => {
                 onChange={handleImageChange}
                 className="mt-1 block w-full"
               />
+
             </div>
           </div>
 
