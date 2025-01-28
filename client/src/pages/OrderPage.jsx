@@ -12,7 +12,7 @@ const OrderPage = () => {
   const { cart, fetchCart } = useCartStore();
 
   const [deliveryLocation, setDeliveryLocation] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState(user?.phone); // New phone number state
+  const [phone, setPhoneNumber] = useState(user?.phone); // New phone number state
   const [locations, setLocations] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState("");
@@ -34,7 +34,7 @@ const OrderPage = () => {
   };
 
   const handlePlaceOrder = async () => {
-    if (!deliveryLocation || !phoneNumber) {
+    if (!deliveryLocation || !phone) {
       setError("Please provide both delivery location and phone number.");
       return;
     }
@@ -51,7 +51,7 @@ const OrderPage = () => {
       const orderDetails = {
         userId: user._id,
         deliveryLocation,
-        phoneNumber, 
+        phone, 
       };
 
       const response = await axios.post("/api/add-order", orderDetails);
@@ -180,7 +180,7 @@ const OrderPage = () => {
                 <input
                   id="phoneNumber"
                   type="text"
-                  value={phoneNumber}
+                  value={phone}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   className="mt-2 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="Enter your phone number"
