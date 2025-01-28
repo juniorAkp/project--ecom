@@ -15,15 +15,23 @@ const editOrder = async(req,res)=>{
   }
 }
 
-const getOrders = async(req,res)=>{
-  try {
-    const orders = await Order.find().sort({dateOrdered: -1}).populate('user','name').populate('deliveryLocation','name')
-    if(!orders) return res.status(400).json({error: "no orders found",success: false})
-    return res.status(200).json({ orders, success: true})
-}catch (e){
-    return res.status(500).json({error: e.message,success: false})
-}
-}
+const getOrders = async (req, res) => {
+    try {
+      const orders = await Order.find({ status: { $ne: 'pending' } }) // Exclude orders with status 'pending'
+        .sort({ dateOrdered: -1 })
+        .populate('user', 'name')
+        .populate('deliveryLocation', 'name');
+  
+      if (!orders || orders.length === 0) {
+        return res.status(400).json({ error: "No orders found", success: false });
+      }
+  
+      return res.status(200).json({ orders, success: true });
+    } catch (e) {
+      return res.status(500).json({ error: e.message, success: false });
+    }
+  };
+  
 
 const getOrdersCount = async(req,res)=>{
   try{
