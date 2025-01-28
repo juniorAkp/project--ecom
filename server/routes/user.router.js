@@ -6,7 +6,7 @@ const { getProduct, products, getProductsByCategoriesFilter, featuredProducts} =
 const {register,login,checkAuth,updateUser,getUser, logout} = require('../controllers/user.controller')
 
 
-const { getOrder, addOrder, deleteOrder, updateToPaid } = require('../controllers/order.controller');
+const { getOrder, addOrder, deleteOrder, updateToPaid, clearCart } = require('../controllers/order.controller');
 
 const { addToCart, updateCart, deleteCart, getUserCart } = require('../controllers/cart.controller');
 
@@ -44,6 +44,7 @@ router.delete('/orders/:id',verify, deleteOrder);
 router.post('/add-to-cart/:userId',verify,addToCart)
 router.put('/cart/:userId',verify,updateCart);
 router.delete('/delete-cart/:userId/:productId',verify,deleteCart);
+router.delete('/clear-cart/:id',verify, clearCart)
 router.get('/cart/:userId',verify,getUserCart)
 
 //category routes

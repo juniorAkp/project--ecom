@@ -17,7 +17,7 @@ const getOrder = async (req, res) => {
 }
 const addOrder = async (req, res) => {
     try {
-        const { userId, deliveryLocation,phone } = req.body;
+        const { userId, deliveryLocation, phone } = req.body;
 
         // Check if delivery location is provided
         if (!deliveryLocation) {
@@ -27,7 +27,7 @@ const addOrder = async (req, res) => {
         // Find the cart for the user and populate the product details
         const cart = await Cart.findOne({ user: userId }).populate('items.product');
         if (!cart || cart.items.length === 0) {
-            return res.status(200).json({ message: 'Cart is empty.', success: true, data:[] });
+            return res.status(200).json({ message: 'Cart is empty.', success: true, data: [] });
         }
 
         // Map cart items to order items structure
@@ -52,10 +52,6 @@ const addOrder = async (req, res) => {
         });
 
         await order.save();
-
-        // Remove the user's cart after order creation
-        await Cart.findOneAndDelete({ user: userId });
-
         res.status(201).json({ order, success: true });
     } catch (error) {
         console.error('Error creating order:', error);
@@ -64,7 +60,14 @@ const addOrder = async (req, res) => {
 };
 
 
-
+const clearCart = async (req, res) => {
+    const { id } = req.params;
+    if (!mongoose.isValidObjectId(id) || !id) {
+        return res.status(400).json({ message: 'invalid or no id provided', success: false })
+    }
+    await Cart.findOneAndDelete({ user: id });
+    return res.status(200).json({message: 'cart cleared',success: true})
+}
 
 const updateToPaid = async (req, res) => {
     try {
@@ -118,5 +121,6 @@ module.exports = {
     getOrder,
     deleteOrder,
     addOrder,
-    updateToPaid
+    updateToPaid,
+    clearCart
 }

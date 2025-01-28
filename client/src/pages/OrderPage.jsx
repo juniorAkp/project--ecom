@@ -38,26 +38,29 @@ const OrderPage = () => {
       setError("Please provide both delivery location and phone number.");
       return;
     }
-
+  
     try {
       const totalAmount = calculateTotal();
       if (totalAmount === 0) {
         alert("Your cart is empty.");
         return;
       }
-
+  
       const totalAmountInKobo = Math.round(totalAmount * 100); // Convert to kobo
-
+  
+      // Save order details to backend
       const orderDetails = {
         userId: user._id,
         deliveryLocation,
-        phone, 
+        phone,
+        cartItems: cart, // Include cart items in the order
       };
-
+  
       const response = await axios.post("/api/add-order", orderDetails);
       if (response.data.success) {
         setSuccess("Your order has been placed successfully!");
-        payWithPaystack(user.email, totalAmountInKobo, response.data.order._id);
+        // Proceed to payment
+        payWithPaystack(user.email, totalAmountInKobo);
       } else {
         setError(response.data.message || "An error occurred while placing the order.");
       }
@@ -66,24 +69,33 @@ const OrderPage = () => {
       setError("An error occurred while placing your order. Please try again.");
     }
   };
-
-  // Initialize Paystack payment
+  
+  // Paystack Payment Logic
   const payWithPaystack = (email, amount) => {
     const handler = PaystackPop.setup({
       key: import.meta.env.VITE_REACT_APP_PAYSTACK_SECRET,
       email: email,
       amount: amount,
-      onSuccess(transaction) {
-        setSuccess(`Transaction complete! Reference: ${transaction.reference}`);
-        navigate('/');
+      onSuccess: async (transaction) => {
+        try {
+          setSuccess(`Payment successful! Transaction Reference: ${transaction.reference}`);
+          // Clear cart after payment confirmation
+          await axios.delete(`/api/clear-cart/${user._id}`);
+          navigate("/"); // Redirect user after successful payment and cart clearing
+        } catch (err) {
+          console.error("Payment confirmation failed:", err);
+          setError("Payment succeeded but an error occurred while processing your order.");
+        }
       },
       onClose: () => {
         setError("Payment process was closed by the user.");
-      }
+      },
     });
-
+  
     handler.openIframe();
   };
+  
+  
 
   useEffect(() => {
     if (user) {
