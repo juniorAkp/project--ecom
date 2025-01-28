@@ -58,7 +58,9 @@ const OrderPage = () => {
   
       const response = await axios.post("/api/add-order", orderDetails);
       if (response.data.success) {
-        setSuccess("Your order has been placed successfully!");
+        setTimeout(()=>{
+          setSuccess("Your order has been placed successfully!");
+        },2000)
         // Proceed to payment
         payWithPaystack(user.email, totalAmountInKobo);
       } else {
@@ -88,7 +90,10 @@ const OrderPage = () => {
         }
       },
       onClose: () => {
-        setError("Payment process was closed by the user.");
+        setTimeout(()=>{
+          setError("Payment process was closed by the user.");
+        },3000)
+        
       },
     });
   

@@ -17,7 +17,7 @@ const editOrder = async(req,res)=>{
 
 const getOrders = async (req, res) => {
     try {
-      const orders = await Order.find({ status: { $ne: 'pending' } }) // Exclude orders with status 'pending'
+      const orders = await Order.find({ status: { $ne: 'Pending' } }) // Exclude orders with status 'pending'
         .sort({ dateOrdered: -1 })
         .populate('user', 'name')
         .populate('deliveryLocation', 'name');
@@ -83,18 +83,25 @@ const deleteOrder = async(req,res)=>{
   }
 }
 
-const getTotalSales = async(req,res)=>{
-  try {
-    const totalSales = await Order.aggregate([
-        {$group: {_id: null, totalSales: {$sum: '$totalPrice'}}}
-    ])
-    if(!totalSales) return res.status(400).json({error: "no orders found",success: false})
-    return res.status(200).json({totalSales: totalSales[0].totalSales, success: true})
-}catch (e){
-    return res.status(500).json({error: e.message,success: false})
-}
-}
-
+const getTotalSales = async (req, res) => {
+    try {
+      const totalSales = await Order.aggregate([
+        // Match only paid orders
+        { $match: { status: 'Paid' } },
+        // Group the orders and sum the total price
+        { $group: { _id: null, totalSales: { $sum: '$totalPrice' } } }
+      ]);
+  
+      if (!totalSales || totalSales.length === 0) {
+        return res.status(400).json({ error: "No paid orders found", success: false });
+      }
+  
+      return res.status(200).json({ totalSales: totalSales[0].totalSales, success: true });
+    } catch (e) {
+      return res.status(500).json({ error: e.message, success: false });
+    }
+  };
+  
 module.exports = {
   getOrders,
   editOrder,
