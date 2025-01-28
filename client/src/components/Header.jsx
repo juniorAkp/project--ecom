@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { FaShoppingCart, FaUserCircle, FaBars, FaTimes, FaSearch } from 'react-icons/fa';
 import { useAuthStore } from '../store/AuthStore';
+import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '../store/CartStore';
 import axios from 'axios';
 
 const Header = ({ setProducts }) => {
+  const navigate = useNavigate();
   const { fetchCart, totalQuantity } = useCartStore();
   const { user, logout } = useAuthStore();
   const [categories, setCategories] = useState([]);
@@ -21,6 +23,10 @@ const Header = ({ setProducts }) => {
     }
   };
 
+  const handleLogout = async()=>{
+    logout();
+    navigate('/')
+  }
   const handleCategoryChange = async (e) => {
     const category = e.target.value;
     setSelectedCategory(category);
@@ -114,7 +120,7 @@ const Header = ({ setProducts }) => {
               <a href={user.isAdmin ? '/admin' : '/user-edit'} aria-label="User Profile">
                 <FaUserCircle className="text-xl sm:text-2xl" />
               </a>
-              <button onClick={logout} className="text-xs sm:text-sm font-medium hover:underline focus:outline-none">
+              <button onClick={handleLogout} className="text-xs sm:text-sm font-medium hover:underline focus:outline-none">
                 Logout, {user.name}
               </button>
             </>
