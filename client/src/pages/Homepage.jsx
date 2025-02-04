@@ -112,28 +112,30 @@ const Homepage = () => {
 
         {/* Product Section */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">Products For You!</h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <div
-                key={product._id}
-                className="bg-white rounded-lg shadow-lg overflow-hidden relative group hover:shadow-xl transition-all duration-300"
-              >
-                <Link to={`/product/${product._id}`}>
-                  <div className="relative">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-48 object-cover rounded-t-lg transition-transform duration-300 ease-in-out transform hover:scale-105"
-                    />
+          <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">Products For You!</h1>
+          <div className="flex justify-center">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 w-full max-w-6xl">
+              {products.map((product) => (
+                <div
+                  key={product._id}
+                  className="bg-white rounded-lg shadow-lg overflow-hidden relative group hover:shadow-xl transition-all duration-300"
+                >
+                  <Link to={`/product/${product._id}`}>
+                    <div className="relative">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-40 object-cover rounded-t-lg transition-transform duration-300 ease-in-out transform hover:scale-105"
+                      />
+                    </div>
+                  </Link>
+                  <div className="p-4 flex flex-col gap-2">
+                    <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
+                    <p className="text-base font-medium text-gray-700">GH¢ {product.price}</p>
                   </div>
-                </Link>
-                <div className="p-4 flex flex-col gap-2">
-                  <h3 className="text-lg font-semibold text-gray-900">{product.name}</h3>
-                  <p className="text-base font-medium text-gray-700">GH¢ {product.price}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </main>
