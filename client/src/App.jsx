@@ -39,6 +39,15 @@ axios.defaults.withCredentials = true;
 
 
 const App = () => {
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+    script.setAttribute("data-ad-client", "ca-pub-9584960445775344");
+    script.crossOrigin = "anonymous";
+    document.head.appendChild(script);
+  }, []);
   const ProtectedRoute = ({ children }) => {
     const { isAuthenticated, user } = useAuthStore();
 
