@@ -34,7 +34,7 @@ app.use(morgan('tiny'))
 
 const job = new cron.CronJob("*/9 * * * *", () => {
   https
-    .get(process.env.BACKEND_URL, (res) => {
+    .get(process.env.BACKEND_URL/api, (res) => {
       if (res.statusCode === 200) console.log("Success");
       else console.log("Error");
     })
@@ -66,7 +66,7 @@ app.use(
   );
 
 //routes
-app.use("/", (req, res) => {
+app.use("/api", (req, res) => {
   res.send("hello welcome")
 })
 app.use('/api',userRoutes)
