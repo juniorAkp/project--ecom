@@ -6,6 +6,7 @@ const session = require('express-session')
 const MongoStore = require('connect-mongo')
 const connection = require('./config/dbConfig');
 const cookieParser = require('cookie-parser')
+const https = require("https")
 const path = require("node:path");
 const app = express();
 const cron = require("cron")
@@ -25,16 +26,20 @@ const adminOnly = require('./middlewares/adminOnly');
 
 //middleware
 app.set('trust proxy', 1)
+app.use(express.json());
 app.use(express.static(path.join(__dirname,'public')))
 app.use(credentials)
-app.use(cors());
+app.use(cors({
+  origin: ["https://project-ecom-1.onrender.com","http://localhost:5173","http://localhost:8081", "http://localhost:3000"],
+  credentials: true
+  }));
 app.use(cookieParser())
-app.use(express.json());
 app.use(morgan('tiny'))
 
-const job = new cron.CronJob("*/9 * * * *", () => {
+const job = new cron.CronJob("*/12 * * * *", () => {
+  
   https
-    .get(process.env.BACKEND_URL/api, (res) => {
+    .get(`${process.env.BACKEND_URL}/api/products`, (res) => {
       if (res.statusCode === 200) console.log("Success");
       else console.log("Error");
     })
@@ -65,14 +70,13 @@ app.use(
     })
   );
 
-//routes
-app.use("/api", (req, res) => {
-  res.send("hello welcome")
-})
+// routes
+app.get("/", async (req, res) => {
+  res.send("req is sending");
+});
+
 app.use('/api',userRoutes)
-
 app.use(payStack);
-
 app.use(verify)
 app.use(adminOnly)
 app.use('/admin',adminRoutes)
