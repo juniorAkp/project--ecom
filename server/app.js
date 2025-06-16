@@ -8,6 +8,7 @@ const connection = require('./config/dbConfig');
 const cookieParser = require('cookie-parser')
 const path = require("node:path");
 const app = express();
+const cron = require("cron")
 const PORT = process.env.PORT || 8080;
 
 const errorHandler = require('./middlewares/errorHandler');
@@ -31,6 +32,20 @@ app.use(cookieParser())
 app.use(express.json());
 app.use(morgan('tiny'))
 
+const job = new cron.CronJob("*/9 * * * *", () => {
+  https
+    .get(process.env.BACKEND_URL, (res) => {
+      if (res.statusCode === 200) console.log("Success");
+      else console.log("Error");
+    })
+    .on("error", (err) => {
+      console.log("error sending req", err);
+    });
+});
+
+// Start the cron job
+job.start();
+
 //session config
 app.use(
     session({
@@ -51,6 +66,9 @@ app.use(
   );
 
 //routes
+app.use("/", (req, res) => {
+  res.send("hello welcome")
+})
 app.use('/api',userRoutes)
 
 app.use(payStack);
